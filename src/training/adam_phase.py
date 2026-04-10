@@ -81,6 +81,16 @@ class AdamResult:
     n_iters:    int
 
 
+def _fmt_gamma(g) -> str:
+    """Format gamma for logging — handles scalar or list."""
+    if isinstance(g, (list, tuple)):
+        return "[" + ", ".join(f"{v:.4f}" for v in g) + "]"
+    try:
+        return f"{float(g):.4f}"
+    except (TypeError, ValueError):
+        return str(g)
+
+
 def run_adam_phases(
     model:   SEBINNModel,
     op:      OperatorState,
@@ -153,7 +163,7 @@ def run_adam_phases(
                 print(
                     f"  Adam {global_it+1:4d} | loss={loss_val:.3e} "
                     f"| mse_unsc={dbg.get('mse_unscaled', float('nan')):.3e} "
-                    f"| gamma={dbg.get('gamma', float('nan')):.4f} "
+                    f"| gamma={_fmt_gamma(dbg.get('gamma', float('nan')))} "
                     f"| phase={i_phase+1}"
                 )
 

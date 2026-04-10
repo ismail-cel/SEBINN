@@ -55,6 +55,16 @@ from src.training.lbfgs import LBFGSConfig, run_lbfgs
 from src.reconstruction.interior import reconstruct_interior
 
 
+def _fmt_gamma(g) -> str:
+    """Format gamma for print — handles scalar or list."""
+    if isinstance(g, (list, tuple)):
+        return "[" + ", ".join(f"{v:.6f}" for v in g) + "]"
+    try:
+        return f"{float(g):.6f}"
+    except (TypeError, ValueError):
+        return str(g)
+
+
 # ===========================================================================
 # Configuration  (mirrors MATLAB cfg struct)
 # ===========================================================================
@@ -83,9 +93,10 @@ def default_cfg() -> dict:
         gmres_maxiter = 300,
 
         # --- SE-BINN model ---
-        hidden_width  = 80,
-        n_hidden      = 4,
-        gamma_init    = 0.0,
+        hidden_width      = 80,
+        n_hidden          = 4,
+        gamma_init        = 0.0,
+        per_corner_gamma  = True,   # diagnostic shows shared γ cancels to 0
 
         # --- Adam  (two-phase: warm-up at 1e-3, refine at 1e-4) ---
         adam_iters    = [500, 500],
@@ -225,7 +236,12 @@ def run(cfg: dict, verbose: bool = True) -> dict:
     if verbose:
         print("\n=== Part B: SE-BINN training ===")
 
-    enrichment = SingularEnrichment(geom=geom, per_corner_gamma=False)
+    per_corner = cfg.get("per_corner_gamma", False)
+    enrichment = SingularEnrichment(geom=geom, per_corner_gamma=per_corner)
+
+    if verbose:
+        print(f"Enrichment: per_corner_gamma={per_corner} | n_gamma={enrichment.n_gamma}"
+              f" | n_singular={enrichment.n_singular}")
 
     w_panel = panel_loss_weights(
         panels,
@@ -259,12 +275,13 @@ def run(cfg: dict, verbose: bool = True) -> dict:
     model = SEBINNModel(
         hidden_width=cfg["hidden_width"],
         n_hidden=cfg["n_hidden"],
-        n_gamma=1,
+        n_gamma=enrichment.n_gamma,
         gamma_init=cfg["gamma_init"],
         dtype=torch.float64,
     )
     if verbose:
-        print(f"Model: n_params={model.n_params()} | gamma_init={cfg['gamma_init']}")
+        print(f"Model: n_params={model.n_params()} | n_gamma={enrichment.n_gamma} "
+              f"| gamma_init={cfg['gamma_init']}")
 
     # ------------------------------------------------------------------ #
     # 5. Adam                                                              #
@@ -289,7 +306,7 @@ def run(cfg: dict, verbose: bool = True) -> dict:
     )
     if verbose:
         print(f"Adam-end: rel_L2={adam_out.rel_L2:.3e} | linf={adam_out.linf:.3e} "
-              f"| gamma={model.gamma_value():.6f}")
+              f"| gamma={_fmt_gamma(model.gamma_value())}")
 
     # ------------------------------------------------------------------ #
     # 6. L-BFGS                                                            #
@@ -331,7 +348,7 @@ def run(cfg: dict, verbose: bool = True) -> dict:
         print(f"BEM reference  : rel_L2={bem_out.rel_L2:.3e} | linf={bem_out.linf:.3e}")
         print(f"SE-BINN Adam   : rel_L2={adam_out.rel_L2:.3e} | linf={adam_out.linf:.3e}")
         print(f"SE-BINN final  : rel_L2={final_out.rel_L2:.3e} | linf={final_out.linf:.3e}")
-        print(f"gamma (final)  : {model.gamma_value():.6f}")
+        print(f"gamma (final)  : {_fmt_gamma(model.gamma_value())}")
         print(f"Total wall time: {t_total:.1f}s")
 
     density_rel_diff = (
@@ -445,7 +462,7 @@ def plot_results(results: dict, outdir: str) -> None:
     ax.set_ylabel(r"$\sigma(s)$", fontsize=12)
     ax.set_title(
         f"Boundary density — Koch(1),  $u = x^2 - y^2$\n"
-        r"$\gamma_\mathrm{final}$" + f" = {results['gamma_final']:.4f}  |  "
+        r"$\gamma_\mathrm{final}$" + f" = {_fmt_gamma(results['gamma_final'])}  |  "
         f"density rel-diff = {results['density_rel_diff']:.2e}",
         fontsize=11,
     )
@@ -549,7 +566,7 @@ def plot_results(results: dict, outdir: str) -> None:
     )
     _interior_triplet(
         results["final_out"],
-        f"SE-BINN final  (γ = {results['gamma_final']:.4f})",
+        f"SE-BINN final  (γ = {_fmt_gamma(results['gamma_final'])})",
         "fig3_interior_sebinn",
     )
 
