@@ -802,16 +802,23 @@ def main():
     enrichment = SingularEnrichment(geom=geom, per_corner_gamma=False)
     sigma_s_np = enrichment.precompute(Yq_np)   # (Nq,)
 
-    # Weighted lstsq: γ*_lstsq = (σ_s · σ_BEM) / (σ_s · σ_s)
-    gamma_lstsq = float(np.dot(sigma_s_np, sigma_bem) / np.dot(sigma_s_np, sigma_s_np))
-    sigma_proj  = gamma_lstsq * sigma_s_np
-    res_norm    = np.linalg.norm(sigma_bem - sigma_proj)
-    bem_norm    = np.linalg.norm(sigma_bem)
-    energy_frac = 1.0 - (res_norm / bem_norm) ** 2
+    # Unweighted lstsq: γ*_lstsq = (σ_s · σ_BEM) / (σ_s · σ_s)
+    # NOTE: γ*_lstsq is the GLOBAL L2 projection coefficient.  It is NOT the
+    # physical singular amplitude, which is σ_BEM / σ_s as r→0 (≈ 1.0 here).
+    # The large γ*_lstsq ≈ 5.4 arises because ||σ_s|| ≪ ||σ_BEM||; the
+    # physical fraction ||σ_s||² / ||σ_BEM||² ≈ 1.3% is much smaller than the
+    # lstsq energy fraction below.
+    gamma_lstsq     = float(np.dot(sigma_s_np, sigma_bem) / np.dot(sigma_s_np, sigma_s_np))
+    sigma_proj      = gamma_lstsq * sigma_s_np
+    res_norm        = np.linalg.norm(sigma_bem - sigma_proj)
+    bem_norm        = np.linalg.norm(sigma_bem)
+    energy_frac     = 1.0 - (res_norm / bem_norm) ** 2  # lstsq R²
+    phys_energy_frac = np.dot(sigma_s_np, sigma_s_np) / max(bem_norm**2, 1e-14)
 
     print(f"  σ_s range: [{sigma_s_np.min():.4f}, {sigma_s_np.max():.4f}]")
-    print(f"  γ*_lstsq                : {gamma_lstsq:.6f}")
-    print(f"  Enrichment energy frac  : {energy_frac*100:.2f}%")
+    print(f"  γ*_lstsq                        : {gamma_lstsq:.6f}")
+    print(f"  Lstsq energy frac (R²)          : {energy_frac*100:.2f}%")
+    print(f"  Physical energy frac ||σ_s||²/||σ_BEM||² : {phys_energy_frac*100:.2f}%")
     print(f"  Residual ||σ_BEM - γ*σ_s|| / ||σ_BEM|| : {res_norm/bem_norm:.4f}")
 
     # ------------------------------------------------------------------
