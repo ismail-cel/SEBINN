@@ -24,7 +24,7 @@ translated directly from the MATLAB reference.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import List, Tuple
+from typing import Callable, List, Optional, Tuple
 
 import torch
 
@@ -87,6 +87,7 @@ def _loss_and_grad(
     theta: torch.Tensor,
     model: SEBINNModel,
     op:    OperatorState,
+    loss_fn: Callable = sebinn_loss,
 ) -> Tuple[float, torch.Tensor]:
     """
     Load theta into model, evaluate loss, return (f, g).
@@ -98,9 +99,10 @@ def _loss_and_grad(
 
     Parameters
     ----------
-    theta : Tensor (D,)  — no grad required
-    model : SEBINNModel  — modified in place
-    op    : OperatorState
+    theta   : Tensor (D,)  — no grad required
+    model   : SEBINNModel  — modified in place
+    op      : OperatorState
+    loss_fn : callable (model, op) -> (loss, dbg)
 
     Returns
     -------
@@ -113,7 +115,7 @@ def _loss_and_grad(
         if p.grad is not None:
             p.grad.zero_()
 
-    loss, _ = sebinn_loss(model, op)
+    loss, _ = loss_fn(model, op)
     loss.backward()
 
     grads = []
@@ -185,6 +187,7 @@ def _armijo_line_search(
     op:           OperatorState,
     cfg:          LBFGSConfig,
     alpha_starts: List[float],
+    loss_fn:      Callable = sebinn_loss,
 ) -> Tuple[float, torch.Tensor, float, torch.Tensor, bool]:
     """
     Armijo backtracking line search.
@@ -217,7 +220,7 @@ def _armijo_line_search(
         for _ in range(cfg.max_backtrack):
             theta_try = theta + alpha_try * p
             try:
-                f_try, g_try = _loss_and_grad(theta_try, model, op)
+                f_try, g_try = _loss_and_grad(theta_try, model, op, loss_fn)
             except Exception:
                 alpha_try *= beta
                 if alpha_try < cfg.step_tol:
@@ -264,6 +267,7 @@ def run_lbfgs(
     op:      OperatorState,
     cfg:     LBFGSConfig,
     verbose: bool = True,
+    loss_fn: Optional[Callable] = None,
 ) -> LBFGSResult:
     """
     L-BFGS refinement with Armijo backtracking.
@@ -278,13 +282,19 @@ def run_lbfgs(
     op      : OperatorState
     cfg     : LBFGSConfig
     verbose : bool
+    loss_fn : callable (model, op) -> (loss, dbg) or None
+        If None, defaults to sebinn_loss.  Pass make_loss_fn(...) for the
+        corner-penalty variant.
 
     Returns
     -------
     LBFGSResult
     """
+    if loss_fn is None:
+        loss_fn = sebinn_loss
+
     theta = model.to_vector().clone()
-    f, g  = _loss_and_grad(theta, model, op)
+    f, g  = _loss_and_grad(theta, model, op, loss_fn)
 
     max_iters = cfg.max_iters
     loss_hist: List[float] = [0.0] * max_iters
@@ -335,7 +345,7 @@ def run_lbfgs(
         # --- Line search ---
         alpha_starts = [cfg.alpha0] + list(cfg.alpha_fallback)
         alpha, theta_new, f_new, g_new, accepted = _armijo_line_search(
-            theta, f, g, p, model, op, cfg, alpha_starts
+            theta, f, g, p, model, op, cfg, alpha_starts, loss_fn
         )
 
         if not accepted:
@@ -344,7 +354,7 @@ def run_lbfgs(
             S, Y, rho_list = [], [], []
             p = -g
             alpha, theta_new, f_new, g_new, accepted = _armijo_line_search(
-                theta, f, g, p, model, op, cfg, list(cfg.alpha_fallback)
+                theta, f, g, p, model, op, cfg, list(cfg.alpha_fallback), loss_fn
             )
             if not accepted:
                 reason = "near-stationary / line-search stalled"

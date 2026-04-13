@@ -44,7 +44,10 @@ from typing import List, Literal, Optional
 import numpy as np
 import torch
 
+from typing import List
+
 from ..boundary.panels import Panel
+from ..boundary.polygon import PolygonGeometry
 from ..quadrature.panel_quad import QuadratureData
 from ..quadrature.self_correction import self_panel_log_correction
 from ..singular.enrichment import SingularEnrichment
@@ -274,3 +277,53 @@ def build_operator_state(
     }
 
     return op, diag
+
+
+def select_corner_points(
+    qdata: QuadratureData,
+    geom: PolygonGeometry,
+    radius_factor: float = 0.3,
+) -> np.ndarray:
+    """
+    Select quadrature node indices within distance R of any reentrant corner.
+
+    R = radius_factor * mean_edge_length
+
+    Only singular (reentrant) corners are considered.  Quadrature nodes on
+    both sides of a reentrant corner will be included, giving the penalty
+    access to the actual spike region.
+
+    Parameters
+    ----------
+    qdata         : QuadratureData  (has Yq of shape (2, Nq))
+    geom          : PolygonGeometry (has vertices, singular_corner_indices)
+    radius_factor : float — fraction of mean edge length to use as radius
+
+    Returns
+    -------
+    indices : ndarray of int, shape (Nc,)
+        Indices into the Nq-dim quadrature node arrays (Yq columns, wq, etc.)
+        of nodes within R of any reentrant corner.
+    """
+    Yq_T   = qdata.Yq.T                       # (Nq, 2)
+    P      = geom.vertices                     # (Nv, 2)
+    n_edges = len(P)
+
+    # Mean edge length
+    edge_lengths = np.array([
+        float(np.linalg.norm(P[(i + 1) % n_edges] - P[i]))
+        for i in range(n_edges)
+    ])
+    R = radius_factor * float(edge_lengths.mean())
+
+    sing_idx = geom.singular_corner_indices    # array of corner vertex indices
+    corner_verts = P[sing_idx]                 # (n_sing, 2)
+
+    # Distance from every quadrature node to every singular corner
+    # shape: (Nq, n_sing)
+    dists = np.linalg.norm(
+        Yq_T[:, None, :] - corner_verts[None, :, :],
+        axis=2,
+    )
+    near = np.any(dists <= R, axis=1)          # (Nq,) bool
+    return np.where(near)[0]

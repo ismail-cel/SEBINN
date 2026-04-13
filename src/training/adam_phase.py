@@ -20,7 +20,7 @@ counter advances monotonically, matching MATLAB's 'it' variable.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import List
+from typing import Callable, List, Optional
 
 import torch
 
@@ -96,6 +96,7 @@ def run_adam_phases(
     op:      OperatorState,
     cfg:     AdamConfig,
     verbose: bool = True,
+    loss_fn: Optional[Callable] = None,
 ) -> AdamResult:
     """
     Run Adam in multiple phases, preserving moment states across phases.
@@ -108,11 +109,17 @@ def run_adam_phases(
     op      : OperatorState — fixed; not rebuilt between phases
     cfg     : AdamConfig
     verbose : bool
+    loss_fn : callable (model, op) -> (loss, dbg) or None
+        If None, defaults to sebinn_loss.  Pass make_loss_fn(...) for the
+        corner-penalty variant.
 
     Returns
     -------
     AdamResult
     """
+    if loss_fn is None:
+        loss_fn = sebinn_loss
+
     total_iters = sum(cfg.phase_iters)
     n_phases    = len(cfg.phase_iters)
 
@@ -143,7 +150,7 @@ def run_adam_phases(
 
         for j in range(n_it):
             optimizer.zero_grad()
-            loss, dbg = sebinn_loss(model, op)
+            loss, dbg = loss_fn(model, op)
             loss.backward()
             optimizer.step()
 

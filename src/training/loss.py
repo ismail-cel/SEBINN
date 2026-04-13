@@ -35,6 +35,8 @@ Returned as a plain dict for logging:
 
 from __future__ import annotations
 
+from typing import Optional
+
 import torch
 
 from ..models.sebinn import SEBINNModel
@@ -132,3 +134,91 @@ def sebinn_loss(
         dbg["gamma"]        = model.gamma_value()
 
     return loss, dbg
+
+
+def sebinn_loss_with_corner_penalty(
+    model: SEBINNModel,
+    op: OperatorState,
+    corner_points: torch.Tensor,    # (Nc, 2)
+    corner_sigma_s: torch.Tensor,   # (Nc,) or (Nc, n_gamma) — not used directly
+    lambda_corner: float,
+) -> tuple[torch.Tensor, dict]:
+    """
+    SE-BINN loss with corner regularisation.
+
+    L_total = L_BIE + λ · mean(|σ_w(x)|²)   for x near reentrant corners
+
+    The BIE loss constrains the SUM σ_w + γσ_s, but cannot distinguish the
+    partition.  The corner penalty directly penalises σ_w at near-corner
+    quadrature nodes, forcing the singular behaviour into γσ_s.
+
+    Key design choice: the penalty is on model.sigma_w(corner_points)
+    (network output only), NOT on the full model(corner_points, σ_s).
+    This breaks the degeneracy without modifying the BIE constraint.
+
+    Parameters
+    ----------
+    model          : SEBINNModel
+    op             : OperatorState
+    corner_points  : Tensor (Nc, 2)  — quadrature nodes near reentrant corners
+    corner_sigma_s : Tensor (Nc,) or (Nc, n_gamma)  — σ_s at corner_points
+                     (included for API symmetry; not used in the penalty)
+    lambda_corner  : float  — penalty weight λ
+
+    Returns
+    -------
+    total_loss : Tensor ()  — L_BIE + λ · penalty, differentiable
+    dbg        : dict       — diagnostics including both components
+    """
+    # Standard BIE loss
+    bie_loss, dbg = sebinn_loss(model, op)
+
+    # Corner penalty: penalise σ_w ONLY (not the full enriched density)
+    sigma_w_corners = model.sigma_w(corner_points)          # (Nc,)
+    penalty = (sigma_w_corners ** 2).mean()                 # scalar
+
+    total_loss = bie_loss + lambda_corner * penalty
+
+    with torch.no_grad():
+        dbg["bie_loss"]          = float(bie_loss.detach())
+        dbg["penalty"]           = float(penalty.detach())
+        dbg["lambda_corner"]     = lambda_corner
+        dbg["total_loss"]        = float(total_loss.detach())
+        dbg["sigma_w_rms_corners"] = float(
+            sigma_w_corners.detach().pow(2).mean().sqrt()
+        )
+
+    return total_loss, dbg
+
+
+def make_loss_fn(
+    corner_points: Optional[torch.Tensor] = None,
+    corner_sigma_s: Optional[torch.Tensor] = None,
+    lambda_corner: float = 0.0,
+):
+    """
+    Return a loss function with signature (model, op) -> (loss, dbg).
+
+    If lambda_corner > 0 and corner_points is provided, uses the corner
+    penalty loss.  Otherwise returns the plain sebinn_loss.
+
+    Parameters
+    ----------
+    corner_points  : Tensor (Nc, 2) or None
+    corner_sigma_s : Tensor (Nc,)  or None
+    lambda_corner  : float
+
+    Returns
+    -------
+    loss_fn : callable (SEBINNModel, OperatorState) -> (Tensor, dict)
+    """
+    if lambda_corner > 0.0 and corner_points is not None:
+        _cp  = corner_points
+        _cs  = corner_sigma_s
+        _lam = lambda_corner
+
+        def _penalised_loss(model, op):
+            return sebinn_loss_with_corner_penalty(model, op, _cp, _cs, _lam)
+
+        return _penalised_loss
+    return sebinn_loss
