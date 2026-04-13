@@ -65,6 +65,82 @@ class Panel:
 # Panel construction
 # ---------------------------------------------------------------------------
 
+def build_graded_panels(
+    P: np.ndarray,
+    n_per_edge: int,
+    graded_edge_configs: list,
+) -> List[Panel]:
+    """
+    Build panels with algebraic (power-law) grading near corners.
+
+    Non-graded edges get n_per_edge uniform panels.
+    Graded edges get panels whose lengths grow algebraically away from the
+    specified corner endpoint.
+
+    Algebraic grading rule on an edge of length L with n panels and exponent β:
+
+        s_j = L * (j/n)^β   for corner at start (j=0 is corner end)
+        s_j = L * (1 - ((n-j)/n)^β)   for corner at end
+
+    β = 1 gives uniform, β > 1 grades toward the corner.
+    Optimal for exponent α singularity: β = 1/|α| = 3 for the L-shape.
+    Practical values: β = 2 (moderate) to β = 3 (strong).
+
+    Parameters
+    ----------
+    P : ndarray, shape (N, 2)
+        Polygon vertices (open, last != first).
+    n_per_edge : int
+        Number of panels for non-graded edges.
+    graded_edge_configs : list of (edge_idx, n_graded, corner_at_end, beta)
+        edge_idx       : 0-indexed edge number.  Edge e: P[e] → P[(e+1)%N].
+        n_graded       : number of panels on this edge.
+        corner_at_end  : True if the corner is at b_edge (end), False if at a_edge.
+        beta           : algebraic grading exponent (> 1 for grading).
+
+    Returns
+    -------
+    panels : list of Panel
+    """
+    N = len(P)
+    panels: List[Panel] = []
+    pid = 0
+
+    graded_map = {cfg[0]: cfg[1:] for cfg in graded_edge_configs}
+
+    for e in range(N):
+        a_edge = P[e]
+        b_edge = P[(e + 1) % N]
+        L_edge = float(np.linalg.norm(b_edge - a_edge))
+
+        if e in graded_map:
+            n_gr, corner_at_end, beta = graded_map[e]
+            idx = np.arange(n_gr + 1, dtype=float)
+            if not corner_at_end:
+                # corner at start: finest panels at j=0
+                t_bounds = L_edge * (idx / n_gr) ** beta
+            else:
+                # corner at end: finest panels at j=n_gr
+                t_bounds = L_edge * (1.0 - ((n_gr - idx) / n_gr) ** beta)
+            t_bounds[0]  = 0.0
+            t_bounds[-1] = L_edge
+            n = n_gr
+        else:
+            t_bounds = np.linspace(0.0, L_edge, n_per_edge + 1)
+            n = n_per_edge
+
+        direction = (b_edge - a_edge) / max(L_edge, 1e-300)
+
+        for j in range(n):
+            a = a_edge + direction * t_bounds[j]
+            b = a_edge + direction * t_bounds[j + 1]
+            length = float(np.linalg.norm(b - a))
+            panels.append(Panel(a=a.copy(), b=b.copy(), length=length, panel_id=pid))
+            pid += 1
+
+    return panels
+
+
 def build_uniform_panels(P: np.ndarray, n_per_edge: int) -> List[Panel]:
     """
     Subdivide each edge of polygon P into n_per_edge uniform panels.
