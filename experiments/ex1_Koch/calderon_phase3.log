@@ -1,0 +1,191 @@
+
+======================================================================
+PHASE 3: Spectrally Scaled Calderón Preconditioner
+======================================================================
+  Koch(1): N_panels=144, N_quad=2304
+
+  Assembling T_h...
+  Computing spectral radius of T̃...
+
+  === Spectral scaling diagnostics ===
+    spectral_radius(T̃)          = 1.119e+04
+    spectral_radius(T̃_s)        = 1.000e+00  (should be 1.0)
+    cond_eig(T̃V)  before scale  = 1.358e+01
+    cond_eig(T̃_sV) after scale  = 1.358e+01  (should match)
+    max|eig(T̃_s V)|             = 0.000316  (should be O(1))
+    cond(V_h)                    = 1.337e+04  (for reference)
+    w_avg/4 = 0.000338  (theory: eigenvalue cluster for smooth ∂Ω)
+
+    Unscaled Calderón loss ≈ T̃-scaled × 1.25e+08
+    After scaling, Calderón loss ≈ standard loss  (both O(||r||²))
+
+  === Manufactured density ===
+    Enrichment energy = 31.53%
+
+  === Short-budget training (Adam [500,500] + LBFGS 3000) ===
+
+================================================================
+  Case B (SE-BINN, std)
+================================================================
+  [B (SE-BINN, std)] init: loss=2.310e-02 | d_err=1.0014 | iL2=1.084e+00 | γ=[+0.000,+0.000,+0.000,+0.000,+0.000,+0.000]
+phase 1/1 | iters=500 | lr=1.0e-03 | Nb=2304
+  Adam    1 | loss=2.310e-02 | mse_unsc=2.310e-02 | gamma=[0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000] | phase=1
+  Adam  100 | loss=1.003e-02 | mse_unsc=1.003e-02 | gamma=[0.0519, -0.0601, 0.0530, 0.0182, -0.0291, 0.0159] | phase=1
+  Adam  200 | loss=5.201e-03 | mse_unsc=5.201e-03 | gamma=[0.1205, -0.1432, 0.1197, 0.0330, -0.0811, 0.0323] | phase=1
+  Adam  300 | loss=9.952e-04 | mse_unsc=9.952e-04 | gamma=[0.1447, -0.1751, 0.1445, 0.0042, -0.0495, 0.0066] | phase=1
+  Adam  400 | loss=8.509e-04 | mse_unsc=8.509e-04 | gamma=[0.1489, -0.1918, 0.1496, -0.0192, 0.0035, -0.0146] | phase=1
+  Adam  500 | loss=7.711e-04 | mse_unsc=7.711e-04 | gamma=[0.1517, -0.2090, 0.1527, -0.0371, 0.0580, -0.0327] | phase=1
+Adam done | total_iters=500 | final_loss=7.711e-04
+  [B (SE-BINN, std)] Adam-ph1: loss=7.711e-04 | d_err=0.7480 | iL2=1.280e-01 | γ=[+0.152,-0.209,+0.153,-0.037,+0.059,-0.033]
+phase 1/1 | iters=500 | lr=1.0e-04 | Nb=2304
+  Adam    1 | loss=7.704e-04 | mse_unsc=7.704e-04 | gamma=[0.1517, -0.2092, 0.1528, -0.0373, 0.0585, -0.0329] | phase=1
+  Adam  100 | loss=7.566e-04 | mse_unsc=7.566e-04 | gamma=[0.1529, -0.2150, 0.1541, -0.0405, 0.0666, -0.0362] | phase=1
+  Adam  200 | loss=7.402e-04 | mse_unsc=7.402e-04 | gamma=[0.1548, -0.2229, 0.1562, -0.0455, 0.0759, -0.0414] | phase=1
+  Adam  300 | loss=7.230e-04 | mse_unsc=7.230e-04 | gamma=[0.1574, -0.2315, 0.1590, -0.0512, 0.0853, -0.0473] | phase=1
+  Adam  400 | loss=7.053e-04 | mse_unsc=7.053e-04 | gamma=[0.1608, -0.2403, 0.1626, -0.0571, 0.0948, -0.0534] | phase=1
+  Adam  500 | loss=6.869e-04 | mse_unsc=6.869e-04 | gamma=[0.1648, -0.2492, 0.1668, -0.0632, 0.1043, -0.0597] | phase=1
+Adam done | total_iters=500 | final_loss=6.869e-04
+  [B (SE-BINN, std)] Adam-ph2: loss=6.869e-04 | d_err=0.7360 | iL2=1.200e-01 | γ=[+0.165,-0.249,+0.167,-0.063,+0.104,-0.060]
+LBFGS    1 | loss=6.866e-04 | gradNorm=8.872e-04 | alpha=1.00e-01 | stepNorm=8.87e-05
+LBFGS  200 | loss=1.522e-04 | gradNorm=5.594e-04 | alpha=1.00e-01 | stepNorm=7.26e-03
+LBFGS  400 | loss=8.219e-05 | gradNorm=4.146e-04 | alpha=1.00e-01 | stepNorm=1.40e-03
+LBFGS  600 | loss=6.228e-05 | gradNorm=9.573e-04 | alpha=1.00e-01 | stepNorm=4.86e-03
+LBFGS  800 | loss=5.099e-05 | gradNorm=7.965e-04 | alpha=1.00e-01 | stepNorm=6.82e-04
+LBFGS 1000 | loss=3.629e-05 | gradNorm=3.000e-04 | alpha=1.00e-01 | stepNorm=8.79e-04
+LBFGS 1200 | loss=2.465e-05 | gradNorm=1.464e-03 | alpha=1.00e-01 | stepNorm=6.61e-03
+LBFGS 1400 | loss=1.877e-05 | gradNorm=7.091e-05 | alpha=1.00e-01 | stepNorm=7.53e-04
+LBFGS 1600 | loss=1.820e-05 | gradNorm=3.557e-04 | alpha=1.00e-01 | stepNorm=9.63e-05
+LBFGS 1800 | loss=1.475e-05 | gradNorm=2.569e-04 | alpha=1.00e-01 | stepNorm=2.13e-03
+LBFGS 2000 | loss=1.390e-05 | gradNorm=3.231e-04 | alpha=1.00e-01 | stepNorm=7.04e-04
+LBFGS 2200 | loss=1.300e-05 | gradNorm=3.525e-04 | alpha=1.00e-01 | stepNorm=6.84e-04
+LBFGS 2400 | loss=1.217e-05 | gradNorm=2.053e-04 | alpha=1.00e-01 | stepNorm=1.14e-03
+LBFGS 2600 | loss=1.150e-05 | gradNorm=1.331e-04 | alpha=1.00e-01 | stepNorm=8.05e-04
+LBFGS 2800 | loss=1.137e-05 | gradNorm=1.919e-04 | alpha=1.00e-01 | stepNorm=1.16e-04
+LBFGS 3000 | loss=1.116e-05 | gradNorm=1.498e-04 | alpha=1.00e-01 | stepNorm=1.13e-03
+LBFGS done | iters=3000 | reason=maxIters | ls_failures=0
+  [B (SE-BINN, std)] LBFGS: loss=1.117e-05 | d_err=0.5484 | iL2=7.179e-03 | γ=[+1.294,-0.306,+1.264,-1.006,+1.037,-1.023]
+
+  B (SE-BINN, std) final:
+    Density rel-diff : 0.5484
+    Interior L2      : 7.730e-03
+    γ error          : 0.4398
+    LBFGS reason     : maxIters
+    Wall time        : 71.3s
+
+================================================================
+  Case D_exact (SE-BINN, V⁻¹)
+================================================================
+  [D_exact (SE-BINN, V⁻¹)] init: loss=3.226e+00 | d_err=1.0014 | iL2=1.084e+00 | γ=[+0.000,+0.000,+0.000,+0.000,+0.000,+0.000]
+phase 1/1 | iters=500 | lr=1.0e-03 | Nb=2304
+  Adam    1 | loss=3.226e+00 | mse_unsc=nan | gamma=[0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000] | phase=1
+  Adam  100 | loss=1.743e+00 | mse_unsc=nan | gamma=[0.0741, -0.0893, 0.0733, -0.0940, 0.1052, -0.0948] | phase=1
+  Adam  200 | loss=1.484e+00 | mse_unsc=nan | gamma=[0.1078, -0.1458, 0.1086, -0.1695, 0.2116, -0.1730] | phase=1
+  Adam  300 | loss=1.154e+00 | mse_unsc=nan | gamma=[0.1450, -0.1729, 0.1473, -0.2310, 0.2937, -0.2250] | phase=1
+  Adam  400 | loss=1.039e+00 | mse_unsc=nan | gamma=[0.1783, -0.2009, 0.1835, -0.2582, 0.3400, -0.2486] | phase=1
+  Adam  500 | loss=9.881e-01 | mse_unsc=nan | gamma=[0.2095, -0.2327, 0.2171, -0.2698, 0.3703, -0.2620] | phase=1
+Adam done | total_iters=500 | final_loss=9.881e-01
+  [D_exact (SE-BINN, V⁻¹)] Adam-ph1: loss=9.881e-01 | d_err=0.5541 | iL2=7.207e-02 | γ=[+0.210,-0.233,+0.217,-0.270,+0.371,-0.262]
+phase 1/1 | iters=500 | lr=1.0e-04 | Nb=2304
+  Adam    1 | loss=9.878e-01 | mse_unsc=nan | gamma=[0.2098, -0.2330, 0.2174, -0.2699, 0.3706, -0.2622] | phase=1
+  Adam  100 | loss=9.786e-01 | mse_unsc=nan | gamma=[0.2193, -0.2428, 0.2269, -0.2751, 0.3801, -0.2680] | phase=1
+  Adam  200 | loss=9.666e-01 | mse_unsc=nan | gamma=[0.2292, -0.2526, 0.2367, -0.2819, 0.3898, -0.2760] | phase=1
+  Adam  300 | loss=9.527e-01 | mse_unsc=nan | gamma=[0.2391, -0.2625, 0.2464, -0.2894, 0.3995, -0.2851] | phase=1
+  Adam  400 | loss=9.374e-01 | mse_unsc=nan | gamma=[0.2490, -0.2722, 0.2560, -0.2974, 0.4090, -0.2949] | phase=1
+  Adam  500 | loss=9.209e-01 | mse_unsc=nan | gamma=[0.2589, -0.2820, 0.2654, -0.3059, 0.4184, -0.3052] | phase=1
+Adam done | total_iters=500 | final_loss=9.209e-01
+  [D_exact (SE-BINN, V⁻¹)] Adam-ph2: loss=9.209e-01 | d_err=0.5350 | iL2=4.786e-02 | γ=[+0.259,-0.282,+0.265,-0.306,+0.418,-0.305]
+LBFGS    1 | loss=9.187e-01 | gradNorm=4.791e-01 | alpha=1.00e-01 | stepNorm=1.46e-02
+LBFGS  200 | loss=7.119e-01 | gradNorm=1.035e+00 | alpha=1.00e-01 | stepNorm=1.52e-02
+LBFGS  400 | loss=5.313e-01 | gradNorm=2.011e+00 | alpha=1.00e-01 | stepNorm=2.23e-02
+LBFGS  600 | loss=3.616e-01 | gradNorm=1.594e+00 | alpha=1.00e-01 | stepNorm=4.46e-02
+LBFGS  800 | loss=2.685e-01 | gradNorm=8.139e-01 | alpha=1.00e-01 | stepNorm=8.39e-03
+LBFGS 1000 | loss=2.267e-01 | gradNorm=8.062e-01 | alpha=1.00e-01 | stepNorm=6.98e-03
+LBFGS 1200 | loss=2.027e-01 | gradNorm=5.229e-01 | alpha=1.00e-01 | stepNorm=2.52e-03
+LBFGS 1400 | loss=1.866e-01 | gradNorm=2.265e-01 | alpha=1.00e-01 | stepNorm=2.92e-03
+LBFGS 1600 | loss=1.713e-01 | gradNorm=6.752e-01 | alpha=1.00e-01 | stepNorm=1.30e-03
+LBFGS 1800 | loss=1.593e-01 | gradNorm=7.617e-01 | alpha=1.00e-01 | stepNorm=5.36e-03
+LBFGS 2000 | loss=1.447e-01 | gradNorm=1.804e+00 | alpha=5.00e-02 | stepNorm=5.22e-03
+LBFGS 2200 | loss=1.382e-01 | gradNorm=1.652e+00 | alpha=1.00e-01 | stepNorm=1.26e-02
+LBFGS 2400 | loss=1.267e-01 | gradNorm=1.242e+00 | alpha=1.00e-01 | stepNorm=8.13e-04
+LBFGS 2600 | loss=1.184e-01 | gradNorm=8.098e-01 | alpha=1.00e-01 | stepNorm=6.98e-03
+LBFGS 2800 | loss=1.087e-01 | gradNorm=4.818e-01 | alpha=1.00e-01 | stepNorm=2.58e-03
+LBFGS 3000 | loss=1.020e-01 | gradNorm=5.113e-01 | alpha=1.00e-01 | stepNorm=1.59e-03
+LBFGS done | iters=3000 | reason=maxIters | ls_failures=0
+  [D_exact (SE-BINN, V⁻¹)] LBFGS: loss=1.021e-01 | d_err=0.1781 | iL2=1.460e-02 | γ=[+0.889,-0.407,+0.873,-0.483,+1.133,-0.568]
+
+  D_exact (SE-BINN, V⁻¹) final:
+    Density rel-diff : 0.1781
+    Interior L2      : 1.518e-02
+    γ error          : 0.1262
+    LBFGS reason     : maxIters
+    Wall time        : 74.6s
+
+================================================================
+  Case D_calderon_scaled (T̃_s)
+================================================================
+  [D_calderon_scaled (T̃_s)] init: loss=2.086e-05 | d_err=1.0014 | iL2=1.084e+00 | γ=[+0.000,+0.000,+0.000,+0.000,+0.000,+0.000]
+phase 1/1 | iters=500 | lr=1.0e-03 | Nb=2304
+  Adam    1 | loss=2.086e-05 | mse_unsc=nan | gamma=[0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000] | phase=1
+  Adam  100 | loss=1.463e-05 | mse_unsc=nan | gamma=[0.0471, -0.0649, 0.0484, 0.0444, -0.0607, 0.0428] | phase=1
+  Adam  200 | loss=8.211e-06 | mse_unsc=nan | gamma=[0.1125, -0.1512, 0.1091, 0.0997, -0.1451, 0.1018] | phase=1
+  Adam  300 | loss=2.942e-07 | mse_unsc=nan | gamma=[0.1250, -0.1689, 0.1201, 0.1023, -0.1557, 0.1042] | phase=1
+  Adam  400 | loss=2.834e-07 | mse_unsc=nan | gamma=[0.1269, -0.1701, 0.1223, 0.0939, -0.1467, 0.0953] | phase=1
+  Adam  500 | loss=2.769e-07 | mse_unsc=nan | gamma=[0.1291, -0.1720, 0.1246, 0.0850, -0.1370, 0.0861] | phase=1
+Adam done | total_iters=500 | final_loss=2.769e-07
+  [D_calderon_scaled (T̃_s)] Adam-ph1: loss=2.769e-07 | d_err=0.8280 | iL2=2.890e-01 | γ=[+0.129,-0.172,+0.125,+0.085,-0.137,+0.086]
+phase 1/1 | iters=500 | lr=1.0e-04 | Nb=2304
+  Adam    1 | loss=2.765e-07 | mse_unsc=nan | gamma=[0.1291, -0.1720, 0.1246, 0.0849, -0.1369, 0.0860] | phase=1
+  Adam  100 | loss=2.741e-07 | mse_unsc=nan | gamma=[0.1296, -0.1725, 0.1251, 0.0830, -0.1342, 0.0841] | phase=1
+  Adam  200 | loss=2.707e-07 | mse_unsc=nan | gamma=[0.1302, -0.1733, 0.1259, 0.0798, -0.1298, 0.0807] | phase=1
+  Adam  300 | loss=2.667e-07 | mse_unsc=nan | gamma=[0.1311, -0.1743, 0.1269, 0.0758, -0.1244, 0.0766] | phase=1
+  Adam  400 | loss=2.625e-07 | mse_unsc=nan | gamma=[0.1320, -0.1756, 0.1280, 0.0712, -0.1183, 0.0719] | phase=1
+  Adam  500 | loss=2.582e-07 | mse_unsc=nan | gamma=[0.1329, -0.1771, 0.1291, 0.0662, -0.1117, 0.0667] | phase=1
+Adam done | total_iters=500 | final_loss=2.582e-07
+  [D_calderon_scaled (T̃_s)] Adam-ph2: loss=2.582e-07 | d_err=0.8128 | iL2=2.818e-01 | γ=[+0.133,-0.177,+0.129,+0.066,-0.112,+0.067]
+LBFGS    1 | loss=2.582e-07 | gradNorm=2.339e-07 | alpha=1.00e-01 | stepNorm=2.34e-08
+LBFGS  200 | loss=2.582e-07 | gradNorm=2.336e-07 | alpha=1.00e-01 | stepNorm=2.34e-08
+LBFGS  400 | loss=2.582e-07 | gradNorm=2.333e-07 | alpha=1.00e-01 | stepNorm=2.33e-08
+LBFGS  600 | loss=2.582e-07 | gradNorm=2.331e-07 | alpha=1.00e-01 | stepNorm=2.33e-08
+LBFGS  800 | loss=2.582e-07 | gradNorm=2.329e-07 | alpha=1.00e-01 | stepNorm=2.33e-08
+LBFGS 1000 | loss=2.582e-07 | gradNorm=2.327e-07 | alpha=1.00e-01 | stepNorm=2.33e-08
+LBFGS 1200 | loss=2.582e-07 | gradNorm=2.325e-07 | alpha=1.00e-01 | stepNorm=2.33e-08
+LBFGS 1400 | loss=2.582e-07 | gradNorm=2.324e-07 | alpha=1.00e-01 | stepNorm=2.32e-08
+LBFGS 1600 | loss=2.582e-07 | gradNorm=2.323e-07 | alpha=1.00e-01 | stepNorm=2.32e-08
+LBFGS 1800 | loss=2.582e-07 | gradNorm=2.321e-07 | alpha=1.00e-01 | stepNorm=2.32e-08
+LBFGS 2000 | loss=2.582e-07 | gradNorm=2.320e-07 | alpha=1.00e-01 | stepNorm=2.32e-08
+LBFGS 2200 | loss=2.582e-07 | gradNorm=2.320e-07 | alpha=1.00e-01 | stepNorm=2.32e-08
+LBFGS 2400 | loss=2.582e-07 | gradNorm=2.319e-07 | alpha=1.00e-01 | stepNorm=2.32e-08
+LBFGS 2600 | loss=2.582e-07 | gradNorm=2.318e-07 | alpha=1.00e-01 | stepNorm=2.32e-08
+LBFGS 2800 | loss=2.582e-07 | gradNorm=2.317e-07 | alpha=1.00e-01 | stepNorm=2.32e-08
+LBFGS 3000 | loss=2.582e-07 | gradNorm=2.317e-07 | alpha=1.00e-01 | stepNorm=2.32e-08
+LBFGS done | iters=3000 | reason=maxIters | ls_failures=0
+  [D_calderon_scaled (T̃_s)] LBFGS: loss=2.582e-07 | d_err=0.8128 | iL2=2.818e-01 | γ=[+0.133,-0.177,+0.129,+0.066,-0.112,+0.067]
+
+  D_calderon_scaled (T̃_s) final:
+    Density rel-diff : 0.8128
+    Interior L2      : 2.798e-01
+    γ error          : 0.9650
+    LBFGS reason     : maxIters
+    Wall time        : 73.1s
+
+======================================================================
+PHASE 3 — SHORT BUDGET SUMMARY
+======================================================================
+  Case                                       d_err         iL2     γ_err     init_loss
+  --------------------------------------  --------  ----------  --------  ------------
+  B (SE-BINN, std)                          0.5484   7.730e-03    0.4398     2.310e-02
+  D_exact (SE-BINN, V⁻¹)                    0.1781   1.518e-02    0.1262     3.226e+00
+  D_calderon_scaled (T̃_s)                  0.8128   2.798e-01    0.9650     2.086e-05
+  D_calderon_raw (T̃, unscaled)             0.5354   2.491e-02    0.3086           nan
+
+  loss_init ratio (Calderón_scaled / std): 0.001  (should be ≈ 1.0 after scaling)
+
+  B   d_err = 0.5484
+  D_exact   d_err = 0.1781  (3.1× over B)
+  D_scaled  d_err = 0.8128  (0.7× over B)
+  saved → /Users/ismaillabaali/SEBINN/experiments/ex1_Koch/figures/calderon_scaled_convergence_short.png
+
+  Full-budget run: NO (threshold: d_scaled < 0.5 × d_B = 0.2742)
+  saved → /Users/ismaillabaali/SEBINN/experiments/ex1_Koch/figures/calderon_scaled_comparison.png
+
+  All figures saved to /Users/ismaillabaali/SEBINN/experiments/ex1_Koch/figures/
