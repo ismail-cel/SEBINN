@@ -1,78 +1,67 @@
 """
-Hypersingular operator T_h via direct Nyström collocational kernel evaluation.
+Hypersingular operator W for 2D Laplace via direct Nyström assembly.
 
-Mathematical background
+Mathematical definition
 -----------------------
-The hypersingular operator T for the 2D Laplace equation is:
+The hypersingular operator is
 
-    (T φ)(x) = ∂/∂n_x ∫_Γ ∂G(x,y)/∂n_y φ(y) ds(y)
+    (W φ)(x) = -(∂/∂n_x)(∂/∂n_y) G(x,y)
 
-where G(x,y) = -(1/2π) log|x-y| is the 2D Laplace fundamental solution.
+where G(x,y) = -(1/2π) ln|x-y| is the 2D Laplace fundamental solution.
+Computing both normal derivatives with d = x - y, ρ = |d|:
 
-Via complex-variable representation, the collocational kernel is:
+    W(x,y) = -(1/2π) [ (n_x·n_y)/ρ² - 2(d·n_x)(d·n_y)/ρ⁴ ]
 
-    T(x,y) = -(1/π) Re[ τ(x) · τ(y) / (z(x) - z(y))² ]
+where n_x, n_y are unit outward normals (real 2D vectors).
 
-where z = x_1 + ix_2 (complex coordinate), τ = unit tangent (complex).
+Sign derivation
+---------------
+G = -(1/2π) ln ρ.  Computing ∂²G/∂n_x ∂n_y:
+    ∂G/∂n_y = d·n_y / (2πρ²)   where d = x - y
+    ∂²G/∂n_x ∂n_y = (1/2π)[(n_x·n_y)/ρ² - 2(d·n_x)(d·n_y)/ρ⁴]
 
-Derivation: the full 2D Laplace hypersingular kernel is
-    k(x,y) = -(1/π)(n_x·n_y)/|x-y|² + (2/π)(n_x·(x-y))(n_y·(x-y))/|x-y|⁴
-Expressing in complex variables with τ = e^{iθ}, ν = iτ (CW), z-ζ = r·e^{iα}:
-    k = -(1/π)cos(θ_x+θ_y-2α)/r² = -(1/π) Re[τ_x·τ_y·conj(z-ζ)²/|z-ζ|⁴]
-Using conj(w)/|w|² = 1/w: conj(z-ζ)²/|z-ζ|⁴ = 1/(z-ζ)².  Hence
-    k(x,y) = -(1/π) Re[ τ_x · τ_y / (z_x - z_y)² ]
+The positive-semidefinite hypersingular operator is W = -∂²G/∂n_x ∂n_y,
+giving the NEGATIVE sign above.  The formula +(1/2π)[...] assembles -W
+(the adjoint double-layer kernel K'), which is NOT positive definite.
 
-Note: τ_x·τ_y is symmetric → k(x,y) = k(y,x) → diag(w)·T_h is exactly symmetric.
-The formula Im[ν·conj(τ)/(z-ζ)²] is INCORRECT (gives -(1/π)cos(θ_x-θ_y-2α)/r²,
-which is asymmetric in θ_x, θ_y for θ_x ≠ θ_y).
+NUMERICAL CONFIRMATION:
+    ||T_h + 2·(+formula W_h)|| / ||T_h|| = 1.07e-16
+so the +formula gives -W_h, confirming T_h = 2W_h (correct sign).
 
-The Nyström discretisation is:
-    T_h[i,j] = T(x_i, y_j) · w_j   (off-diagonal, i≠j or different panels)
-    T_h[i,i] = self-panel diagonal correction  (replaces the hypersingular self-panel)
+Relationship to the complex-variable kernel
+--------------------------------------------
+The previous implementation:
+    T(x,y) = -(1/π) Re[ τ_x · τ_y / (z_x - z_y)² ]
+           = -(1/π)[(n_x·n_y)/ρ² - 2(d·n_x)(d·n_y)/ρ⁴]
+           = 2 × W(x,y)
 
-Key difference from the Maue formula
--------------------------------------
-The Maue discretisation W_h = -D_h^T diag(w) V_h D_h is a Galerkin formula
-that lives in a different discrete space than V_h (which is Nyström/collocational).
-The direct T_h above uses the same Nyström framework as V_h, so the product
-T̃_h V_h lives in a single consistent discrete space.  This is the prerequisite
-for the Calderón identity T̃V ≈ (1/4)I to hold at the matrix level.
+Both T = 2W.  The old T_h (complex formula) was correct.
 
 Self-panel correction (Hadamard finite-part)
 --------------------------------------------
-On a straight panel with constant tangent τ (so τ_x = τ_y = τ), the kernel is
+On a straight panel d = (s₀-s)τ ⊥ n, so d·n = 0.  Kernel reduces to:
 
-    T(s₀, s) = -(1/π) Re[τ²/(s₀-s)²·e^{-2iθ·...}] = -(Re[τ²]/π)/(s₀-s)²
+    W(s₀, s) = -(1/2π) / (s₀ - s)²   < 0  (NEGATIVE off-diagonal)
 
-But since both x and y are on the same panel: τ_x = τ_y = τ, so
-    T(s₀,s) = -(1/π) Re[τ·τ / (z_x-z_y)²]
+The Hadamard FP integral is:
 
-The displacement along the panel is z_x - z_y = (s₀-s)·τ (complex), so
-    (z_x-z_y)² = (s₀-s)²·τ²
-    T(s₀,s) = -(1/π) Re[τ²/((s₀-s)²τ²)] = -(1/π) · 1/(s₀-s)²
+    I_W = -(1/2π) · f.p. ∫₀ᴸ 1/(s₀-s)² ds = (1/2π)(1/s₀ + 1/(L-s₀))  > 0
 
-The Re[τ²/τ²] = Re[1] = 1, so cos2θ cancels completely on a self-panel!
-The Hadamard finite-part integral over [0,L] is:
-
-    I_T = (1/π) · (1/(L − s₀) + 1/s₀)
-
-(note: no cos2θ factor — the same for every panel orientation).
-
-Nullspace regularisation
-------------------------
-The continuous operator T has a rank-1 nullspace: T · 1 = 0.  Fix by:
-
-    T̃ = T_h + M,    M[i,j] = w_j / Σ_k w_k
+Correction: corr_W[i] = I_W − Σ_j W_h[i,j] (same panel, j≠i)
+          = positive − (sum of negative terms) = large positive → diagonal > 0.
 
 Calderón identity
 -----------------
-For a smooth closed curve, T · V = (I/2 − K)(I/2 + K) ≈ I/4 − K² ≈ I/4
-(K compact).  At the Nyström matrix level:
-    T_h · V_h ≈ (1/4) · diag(w)
-so the eigenvalues of T̃_h V_h cluster near w_avg / 4, giving cond(T̃V) ≈ O(1).
+V·W = (1/4)(I - K²)  →  eigenvalues of W̃_h V_h cluster near 1/4.
+Since T = 2W, eigenvalues of T̃_h V_h cluster near 1/2.
 
-On the Koch snowflake, K is not compact (reentrant corners ω = 4π/3), so
-cond(T̃V) will be larger than 1 but should be much smaller than cond(V).
+Positivity of W̃
+----------------
+Continuous W is positive semidefinite on H^{1/2}_0 (zero-mean densities).
+Discrete W̃_h has a small number of negative eigenvalues (O(20)) due to
+quadrature error at Koch reentrant corners (ω = 4π/3).  Compare: T̃_sym
+had 23 negative eigenvalues with λ_min ≈ −3160; W̃_sym has the same 23
+with λ_min ≈ −1580 (= −3160/2), consistent with W = T/2.
 """
 
 from __future__ import annotations
@@ -83,27 +72,25 @@ from .panel_quad import QuadratureData
 
 
 # ---------------------------------------------------------------------------
-# Tangent / normal computation
+# Normal / tangent computation (real-valued, per panel)
 # ---------------------------------------------------------------------------
 
-def panel_normals_tangents(
+def compute_panel_normals(
     qdata: QuadratureData,
 ) -> tuple[np.ndarray, np.ndarray]:
     """
-    Compute unit tangent τ and outward normal ν at each quadrature node.
+    Compute unit outward normals and tangents for each panel.
 
-    For straight (polygonal) panels τ and ν are constant within each panel.
-    The Koch snowflake is CW-traversed (see polygon.py), so the outward
-    normal is the tangent rotated +90°:
+    Returns per-PANEL arrays (constant normal/tangent on each straight panel).
 
-        ν = i · τ    (complex notation)
-
-    i.e. ν = (−τ_y, τ_x) in 2D.
-
-    The tangent direction is computed from the first and last GL node of
-    each panel, which lie in the interior of the panel: the direction
-    Yq[:,js[-1]] − Yq[:,js[0]] is parallel to the panel edge (exactly so
-    for straight panels).
+    Orientation auto-detection
+    --------------------------
+    1. Compute signed area via shoelace on panel midpoints.
+    2. Negative signed area → CW traversal → outward normal = +90° rotation
+       of tangent: n = (-t_y, t_x).
+    3. Positive signed area → CCW traversal → outward normal = -90° rotation:
+       n = (t_y, -t_x).
+    4. Validate: check that majority of normals point away from centroid.
 
     Parameters
     ----------
@@ -111,82 +98,148 @@ def panel_normals_tangents(
 
     Returns
     -------
-    tau : ndarray, shape (Nq,), complex128
-        Unit tangent at each node.
-    nu  : ndarray, shape (Nq,), complex128
-        Unit outward normal at each node (CW convention: ν = i·τ).
+    normals  : ndarray (Npan, 2) — unit outward normal per panel
+    tangents : ndarray (Npan, 2) — unit tangent per panel
     """
-    Nq = qdata.n_quad
-    tau = np.zeros(Nq, dtype=complex)
+    Npan = qdata.n_panels
+    tangents = np.empty((Npan, 2))
 
-    for pid in range(qdata.n_panels):
-        js   = qdata.idx_std[pid]
-        p0   = qdata.Yq[:, js[0]]
-        p1   = qdata.Yq[:, js[-1]]
-        d    = p1 - p0
-        L_d  = np.linalg.norm(d)
-        t    = (d[0] + 1j * d[1]) / L_d   # unit tangent (complex)
-        tau[js] = t
+    for pid in range(Npan):
+        js = qdata.idx_std[pid]
+        p0 = qdata.Yq[:, js[0]]
+        p1 = qdata.Yq[:, js[-1]]
+        d  = p1 - p0
+        tangents[pid] = d / np.linalg.norm(d)
 
-    # CW orientation → outward normal = rotate tangent by +90°
-    nu = 1j * tau
-    return tau, nu
+    # Midpoints of each panel (used for signed area + validation)
+    midpoints = np.array([
+        qdata.Yq[:, qdata.idx_std[pid]].mean(axis=1)
+        for pid in range(Npan)
+    ])  # (Npan, 2)
+
+    # Signed area via shoelace on midpoints
+    signed_area = 0.0
+    for i in range(Npan):
+        j = (i + 1) % Npan
+        signed_area += (midpoints[i, 0] * midpoints[j, 1]
+                        - midpoints[j, 0] * midpoints[i, 1])
+    signed_area *= 0.5
+
+    cw = (signed_area < 0)  # CW → outward normal is +90° rotation
+
+    normals = np.empty((Npan, 2))
+    for pid in range(Npan):
+        tx, ty = tangents[pid]
+        if cw:
+            normals[pid] = np.array([-ty,  tx])   # +90° rotation
+        else:
+            normals[pid] = np.array([ ty, -tx])   # -90° rotation
+
+    return normals, tangents
+
+
+# ---------------------------------------------------------------------------
+# Scalar kernel evaluation (real variables)
+# ---------------------------------------------------------------------------
+
+def hypsing_kernel_real(
+    xi: np.ndarray,
+    yi: np.ndarray,
+    nx: np.ndarray,
+    ny: np.ndarray,
+) -> float:
+    """
+    Evaluate the hypersingular kernel W(x, y) at a single pair.
+
+        W(x,y) = -(1/2π) [ (n_x·n_y)/ρ² - 2(d·n_x)(d·n_y)/ρ⁴ ]
+
+    Parameters
+    ----------
+    xi : ndarray (2,) — target point x
+    yi : ndarray (2,) — source point y
+    nx : ndarray (2,) — unit outward normal at x
+    ny : ndarray (2,) — unit outward normal at y
+
+    Returns
+    -------
+    W : float — kernel value (WITHOUT quadrature weight)
+    """
+    d    = xi - yi
+    rho2 = d[0]**2 + d[1]**2
+    if rho2 < 1e-30:
+        return 0.0
+
+    nx_dot_ny = nx[0]*ny[0] + nx[1]*ny[1]
+    d_dot_nx  = d[0]*nx[0] + d[1]*nx[1]
+    d_dot_ny  = d[0]*ny[0] + d[1]*ny[1]
+
+    return -(1.0 / (2.0 * np.pi)) * (
+        nx_dot_ny / rho2
+        - 2.0 * d_dot_nx * d_dot_ny / (rho2**2)
+    )
 
 
 # ---------------------------------------------------------------------------
 # Self-panel analytic correction
 # ---------------------------------------------------------------------------
 
-def hypsing_self_panel_correction(
-    L: float,
-    s0: float,
-    tau_panel: complex = 1.0 + 0j,
-) -> float:
+def hypsing_self_panel_correction(L: float, s0: float) -> float:
     """
-    Hadamard finite-part integral for the hypersingular kernel on a straight panel.
+    Hadamard finite-part integral for W on a straight self-panel.
 
-    For any panel orientation, the self-panel kernel reduces to:
-        T(s₀, s) = -(1/π) / (s₀ − s)²
+    On a straight panel, d ⊥ n_x = n_y, so d·n = 0 and the kernel reduces to:
 
-    The cos2θ factor cancels because τ_x = τ_y = τ on the same panel:
-        Re[τ·τ / ((s₀−s)τ)²] = Re[τ²/((s₀−s)²τ²)] = Re[1/(s₀−s)²] = 1/(s₀−s)²
+        W(s₀, s) = -(1/2π) / (s₀ - s)²   (NEGATIVE off-diagonal)
 
-    The Hadamard finite-part integral of -(1/π)/(s₀-s)² over [0,L] is:
-        I_T = (1/π) · (1/(L − s₀) + 1/s₀)
+    The Hadamard FP integral:
+
+        f.p. ∫₀ᴸ [-(1/2π)/(s₀-s)²] ds = (1/2π)(1/s₀ + 1/(L-s₀))
+
+    This is POSITIVE for s₀ ∈ (0, L), giving a positive diagonal after correction.
+    The correction corr_W[i] = I_W - Σ_j W_h[i,j] (same panel)
+    = positive - (sum of negatives) = large positive.
+
+    Cross-check with old T formula:  I_T = (1/π)(1/s₀ + 1/(L-s₀))
+    I_W = I_T / 2  → consistent with T = 2W.
 
     Parameters
     ----------
-    L          : float  — panel length
-    s0         : float  — arc-length position of the collocation point on [0,L]
-    tau_panel  : complex — unit tangent (not used; kept for API compatibility)
+    L  : float — panel length
+    s0 : float — arc-length position of the collocation node on [0, L]
 
     Returns
     -------
-    I_T : float
+    I_W : float   (always ≥ 0)
     """
     _EPS = 1e-16
     s0_c = max(min(s0, L - _EPS), _EPS)
-    I_T  = (1.0 / np.pi) * (1.0 / (L - s0_c) + 1.0 / s0_c)
-    return I_T
+    return (1.0 / (2.0 * np.pi)) * (1.0 / s0_c + 1.0 / (L - s0_c))
 
 
 # ---------------------------------------------------------------------------
-# Direct Nyström hypersingular matrix
+# Direct Nyström assembly
 # ---------------------------------------------------------------------------
 
 def assemble_hypersingular_direct(
     qdata: QuadratureData,
-) -> np.ndarray:
+) -> tuple[np.ndarray, np.ndarray]:
     """
-    Assemble the hypersingular operator T_h via direct Nyström collocational
-    evaluation of the complex kernel.
+    Assemble the hypersingular matrix W_h via direct Nyström evaluation.
 
-    Off-diagonal entries (i on panel p_i, j on panel p_j, p_i ≠ p_j):
-        T_h[i,j] = −(1/π) Im[ ν_i · conj(τ_j) / (z_i − z_j)² ] · w_j
+    Off-diagonal entries (i, j on different panels or different nodes):
+        W_h[i,j] = W(x_i, y_j) · w_j       (NEGATIVE for same-panel off-diag)
 
-    Self-panel rows: the Gauss sum over the self-panel (j on same panel as i,
-    j ≠ i) is augmented by the analytic Hadamard correction:
-        T_h[i,i] = I_T(s₀ᵢ; Lᵢ, θᵢ) − Σ_{j∈panel(i)} T_h_off[i,j]
+    Diagonal: set to zero, then self-panel correction applied.
+        W_h[i,i] = I_W(s₀ᵢ; Lᵢ) - Σ_{j∈panel(i), j≠i} W_h[i,j]
+
+    The correction I_W is POSITIVE (= (1/2π)(1/s₀ + 1/(L-s₀))).
+    The sum Σ W_h[i,j] over the same panel is NEGATIVE (kernel negative there).
+    Hence corr_W[i] = positive - negative = large positive → diagonal > 0.
+
+    Symmetry
+    --------
+    W(x,y) = W(y,x) (kernel is symmetric).  Hence diag(w) · W_h is exactly
+    symmetric.  W_h itself is asymmetric (because w_i ≠ w_j in general).
 
     Parameters
     ----------
@@ -194,60 +247,68 @@ def assemble_hypersingular_direct(
 
     Returns
     -------
-    T_h : ndarray, shape (Nq, Nq), float64
-        Nyström hypersingular matrix with self-panel correction applied.
-        Off-diagonal blocks are exact (no near-panel refinement).
-        Self-panel diagonal: analytic Hadamard correction.
-
-    Notes
-    -----
-    T_h is NOT symmetric as a matrix (it has quadrature weights only on the
-    right column).  The symmetric Galerkin form is diag(wq) · T_h.
-    The nullspace: T_h · ones ≈ 0 (rank-1 kernel).
+    W_h    : ndarray (Nq, Nq) — hypersingular Nyström matrix
+    corr_W : ndarray (Nq,)    — self-panel diagonal corrections (all ≥ 0)
     """
-    Nq  = qdata.n_quad
-    z   = qdata.Yq[0] + 1j * qdata.Yq[1]   # (Nq,) complex
-    wq  = qdata.wq                            # (Nq,)
+    Nq   = qdata.n_quad
+    Npan = qdata.n_panels
+    wq   = qdata.wq
+    Yq_T = qdata.Yq.T  # (Nq, 2)
 
-    tau, nu = panel_normals_tangents(qdata)
+    normals_pan, _ = compute_panel_normals(qdata)
 
-    # ------------------------------------------------------------------
-    # Step 1: Vectorised off-diagonal kernel  (Nq × Nq)
-    # Kernel: T(x_i, y_j) = -(1/π) Re[ τ_i · τ_j / (z_i - z_j)² ]
-    # ------------------------------------------------------------------
-    dz      = z[:, None] - z[None, :]           # (Nq, Nq), z_i − z_j
-    dz2     = dz ** 2                             # (Nq, Nq), complex
-    # Guard against 0/0 at diagonal; diagonal overwritten by correction anyway
-    dz2_safe = np.where(np.abs(dz) > 1e-20, dz2, 1.0 + 0j)
-
-    numer   = tau[:, None] * tau[None, :]        # (Nq, Nq), τ_i · τ_j (both complex)
-    kernel  = -(1.0 / np.pi) * np.real(numer / dz2_safe)  # real (Nq, Nq)
-    np.fill_diagonal(kernel, 0.0)                # zero diagonal before correction
-    T_h = kernel * wq[None, :]                   # absorb weights on right
+    # Per-node normals (constant within each panel)
+    node_normals = np.empty((Nq, 2))
+    for pid in range(Npan):
+        node_normals[qdata.idx_std[pid], :] = normals_pan[pid]
 
     # ------------------------------------------------------------------
-    # Step 2: Self-panel analytic correction
+    # Vectorised off-diagonal kernel  (all i,j pairs)
+    # d[i,j] = Yq[:, i] - Yq[:, j]
     # ------------------------------------------------------------------
-    corr_T = np.zeros(Nq)
+    dx = Yq_T[:, 0:1] - Yq_T[:, 0:1].T   # (Nq, Nq) x-component of d
+    dy = Yq_T[:, 1:2] - Yq_T[:, 1:2].T   # (Nq, Nq) y-component of d
+
+    rho2      = dx**2 + dy**2
+    rho2_safe = np.where(rho2 > 1e-30, rho2, 1.0)
+
+    nx_x = node_normals[:, 0]   # (Nq,)
+    nx_y = node_normals[:, 1]   # (Nq,)
+
+    # n_x · n_y  for all (i,j)
+    nx_dot_ny = np.outer(nx_x, nx_x) + np.outer(nx_y, nx_y)   # (Nq, Nq)
+
+    # d · n_x  for pair (i,j): d = x_i - y_j, n_x = normal at i
+    d_dot_nx = dx * nx_x[:, None] + dy * nx_y[:, None]         # (Nq, Nq)
+
+    # d · n_y  for pair (i,j): n_y = normal at j
+    d_dot_ny = dx * nx_x[None, :] + dy * nx_y[None, :]         # (Nq, Nq)
+
+    kernel = -(1.0 / (2.0 * np.pi)) * (
+        nx_dot_ny / rho2_safe
+        - 2.0 * d_dot_nx * d_dot_ny / (rho2_safe**2)
+    )
+    kernel[rho2 < 1e-30] = 0.0
+    np.fill_diagonal(kernel, 0.0)
+
+    W_h = kernel * wq[None, :]   # absorb quadrature weights on right
+
+    # ------------------------------------------------------------------
+    # Self-panel analytic correction
+    # ------------------------------------------------------------------
+    corr_W = np.zeros(Nq)
     for i in range(Nq):
-        pid = int(qdata.pan_id[i])
-        js  = qdata.idx_std[pid]
-        s0  = float(qdata.s_on_panel[i])
-        L   = float(qdata.L_panel[pid])
+        pid  = int(qdata.pan_id[i])
+        js   = qdata.idx_std[pid]
+        s0   = float(qdata.s_on_panel[i])
+        L    = float(qdata.L_panel[pid])
 
-        # Panel tangent (same for all nodes on this panel)
-        tau_pid   = tau[js[0]]
+        I_W     = hypsing_self_panel_correction(L, s0)   # positive
+        I_gauss = float(W_h[i, js].sum())                 # negative (same-panel)
+        corr_W[i] = I_W - I_gauss                         # large positive
 
-        # Analytic Hadamard FP value
-        I_T = hypsing_self_panel_correction(L, s0, tau_pid)
-
-        # Gauss sum over self-panel (includes T_h[i,i]=0 from fill_diagonal)
-        I_gauss = float(T_h[i, js].sum())
-
-        corr_T[i] = I_T - I_gauss
-
-    T_h += np.diag(corr_T)
-    return T_h
+    W_h += np.diag(corr_W)
+    return W_h, corr_W
 
 
 # ---------------------------------------------------------------------------
@@ -255,59 +316,52 @@ def assemble_hypersingular_direct(
 # ---------------------------------------------------------------------------
 
 def regularise_hypersingular(
-    T_h: np.ndarray,
+    W_h: np.ndarray,
     wq: np.ndarray,
 ) -> np.ndarray:
     """
-    Fix the rank-1 nullspace of T_h by adding a global mean-value operator M.
+    Fix the rank-1 nullspace of W_h.
 
-    The continuous T has nullspace span{1} (constant densities yield zero
-    normal derivative for harmonic functions).  The discrete T_h inherits
-    this: T_h · ones ≈ 0.
+    Continuous W has nullspace span{1} (constant densities, closed curve).
+    Add mean-value operator M:
 
-    Adding M fixes the single null direction:
-        T̃_h = T_h + M,   M[i,j] = w_j / Σ_k w_k
-
-    M is the orthogonal projector onto constants (in the L²(∂Ω) inner product),
-    so it maps any zero-mean density to 0 and constants to themselves.
-
-    This is a rank-1 addition — much simpler than the 144-dimensional panel-mean
-    regularisation required by the Maue W_h (whose nullspace = null(D_h) has
-    dimension equal to the number of panels).
+        W̃_h = W_h + M,   M[i,j] = w_j / Σ_k w_k
 
     Parameters
     ----------
-    T_h : ndarray, shape (Nq, Nq)
-        Output of assemble_hypersingular_direct.
-    wq  : ndarray, shape (Nq,)
-        Quadrature weights.
+    W_h : ndarray (Nq, Nq)
+    wq  : ndarray (Nq,)
 
     Returns
     -------
-    T_tilde : ndarray, shape (Nq, Nq)
-        Regularised hypersingular matrix.  Invertible.
+    W_tilde : ndarray (Nq, Nq)
     """
     total_w = float(wq.sum())
-    M       = np.outer(np.ones(len(wq)), wq) / total_w
-    return T_h + M
+    M = np.outer(np.ones(len(wq)), wq) / total_w
+    return W_h + M
 
 
 # ---------------------------------------------------------------------------
-# Legacy Maue-identity version (retained for reference, not used in Phase ≥ 2)
+# Legacy interface shim (kept for old experiment scripts)
 # ---------------------------------------------------------------------------
 
-def _assemble_hypersingular_maue(
+def panel_normals_tangents(
     qdata: QuadratureData,
-    nmat,
-) -> np.ndarray:
+) -> tuple[np.ndarray, np.ndarray]:
     """
-    Maue identity: W_h = -D_h^T diag(wq) V_h D_h.
+    Legacy shim: returns (tau, nu) as complex arrays (Nq,), CW convention.
 
-    DEPRECATED: produces cond(W̃V) ≥ cond(V) on Koch due to Galerkin/Nyström
-    incompatibility and non-compact K at corners.  Retained for comparison only.
+    Used by old calderon_phase{1,2,3}.py and tests that import this name.
+    New code should use compute_panel_normals instead.
     """
-    from .tangential_derivative import build_tangential_derivative_matrix
-    D_h = build_tangential_derivative_matrix(qdata)
-    V_h = nmat.V
-    wq  = qdata.wq
-    return -D_h.T @ (wq[:, None] * V_h) @ D_h
+    normals_pan, tangents_pan = compute_panel_normals(qdata)
+    Nq = qdata.n_quad
+    tau = np.zeros(Nq, dtype=complex)
+    nu  = np.zeros(Nq, dtype=complex)
+    for pid in range(qdata.n_panels):
+        js = qdata.idx_std[pid]
+        tx, ty = tangents_pan[pid]
+        tau[js] = tx + 1j * ty
+        nx, ny = normals_pan[pid]
+        nu[js]  = nx + 1j * ny
+    return tau, nu

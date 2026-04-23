@@ -1,0 +1,430 @@
+
+======================================================================
+CALDERÓN FINAL: Median-eigenvalue normalised T̃_norm
+======================================================================
+  Koch(1): N_panels=144, N_quad=2304
+
+  Assembling T_h + computing normalisation...
+
+  === Normalisation diagnostics ===
+    median|λ(T̃V)|                = 0.389683
+    Before: eig(T̃V)  min=0.2608  median=0.3897  max=3.5416  cond=13.6
+    After:  eig(T̃_n V) min=0.6692  median=1.0000  max=9.0885  cond=13.6
+    cond unchanged: 1  (13.58 → 13.58)
+
+    cond(V_h)  = 1.337e+04  (reference)
+    cond(T̃_n V) = 6.429e+03
+
+  === Manufactured density ===
+    Enrichment energy = 31.53%
+
+  === Initial loss scale (σ=0) ===
+    std  loss (||r||²/N):       2.066e-02
+    prec loss (||T̃_n r||²/N):  1.617e+04
+    ratio prec/std:             782452.110  (target: 1.0)
+    ||V_inv V − I||_F/√N = 2.770e-14
+
+  === Training: 4 cases (full budget) ===
+  Adam: [1000, 1000, 1000] iters at lr [0.001, 0.0003, 0.0001]
+  LBFGS: 15000 iters, memory 30
+
+==================================================================
+  Case A (BINN, std)
+==================================================================
+  trainable params: 19761  (gamma frozen)
+  [A (BINN, std)] init: loss=2.310e-02 | d_err=1.0014 | iL2=1.084e+00 | γ=[+0.000,+0.000,+0.000,+0.000,+0.000,+0.000]
+phase 1/1 | iters=1000 | lr=1.0e-03 | Nb=2304
+  Adam    1 | loss=2.310e-02 | mse_unsc=2.310e-02 | gamma=[0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000] | phase=1
+  Adam  200 | loss=5.650e-03 | mse_unsc=5.650e-03 | gamma=[0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000] | phase=1
+  Adam  400 | loss=9.738e-04 | mse_unsc=9.738e-04 | gamma=[0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000] | phase=1
+  Adam  600 | loss=9.424e-04 | mse_unsc=9.424e-04 | gamma=[0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000] | phase=1
+  Adam  800 | loss=9.193e-04 | mse_unsc=9.193e-04 | gamma=[0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000] | phase=1
+  Adam 1000 | loss=8.891e-04 | mse_unsc=8.891e-04 | gamma=[0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000] | phase=1
+Adam done | total_iters=1000 | final_loss=8.891e-04
+  [A (BINN, std)] Adam-ph1: loss=8.891e-04 | d_err=0.7705 | iL2=1.369e-01 | γ=[+0.000,+0.000,+0.000,+0.000,+0.000,+0.000]
+phase 1/1 | iters=1000 | lr=3.0e-04 | Nb=2304
+  Adam    1 | loss=8.889e-04 | mse_unsc=8.889e-04 | gamma=[0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000] | phase=1
+  Adam  200 | loss=8.760e-04 | mse_unsc=8.760e-04 | gamma=[0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000] | phase=1
+  Adam  400 | loss=8.543e-04 | mse_unsc=8.543e-04 | gamma=[0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000] | phase=1
+  Adam  600 | loss=8.223e-04 | mse_unsc=8.223e-04 | gamma=[0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000] | phase=1
+  Adam  800 | loss=7.743e-04 | mse_unsc=7.743e-04 | gamma=[0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000] | phase=1
+  Adam 1000 | loss=7.024e-04 | mse_unsc=7.024e-04 | gamma=[0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000] | phase=1
+Adam done | total_iters=1000 | final_loss=7.024e-04
+  [A (BINN, std)] Adam-ph2: loss=7.024e-04 | d_err=0.7448 | iL2=1.237e-01 | γ=[+0.000,+0.000,+0.000,+0.000,+0.000,+0.000]
+phase 1/1 | iters=1000 | lr=1.0e-04 | Nb=2304
+  Adam    1 | loss=7.020e-04 | mse_unsc=7.020e-04 | gamma=[0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000] | phase=1
+  Adam  200 | loss=6.666e-04 | mse_unsc=6.666e-04 | gamma=[0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000] | phase=1
+  Adam  400 | loss=5.940e-04 | mse_unsc=5.940e-04 | gamma=[0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000] | phase=1
+  Adam  600 | loss=4.776e-04 | mse_unsc=4.776e-04 | gamma=[0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000] | phase=1
+  Adam  800 | loss=3.467e-04 | mse_unsc=3.467e-04 | gamma=[0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000] | phase=1
+  Adam 1000 | loss=2.596e-04 | mse_unsc=2.596e-04 | gamma=[0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000] | phase=1
+Adam done | total_iters=1000 | final_loss=2.596e-04
+  [A (BINN, std)] Adam-ph3: loss=2.596e-04 | d_err=0.7004 | iL2=7.135e-02 | γ=[+0.000,+0.000,+0.000,+0.000,+0.000,+0.000]
+LBFGS    1 | loss=2.595e-04 | gradNorm=4.239e-03 | alpha=5.00e-02 | stepNorm=3.31e-04
+LBFGS  300 | loss=1.104e-04 | gradNorm=1.797e-03 | alpha=1.00e-01 | stepNorm=4.20e-03
+LBFGS  600 | loss=8.556e-05 | gradNorm=3.312e-04 | alpha=1.00e-01 | stepNorm=6.08e-03
+LBFGS  900 | loss=4.750e-05 | gradNorm=8.522e-04 | alpha=1.00e-01 | stepNorm=4.16e-03
+LBFGS 1200 | loss=2.784e-05 | gradNorm=7.347e-04 | alpha=1.00e-01 | stepNorm=5.98e-03
+LBFGS 1500 | loss=2.247e-05 | gradNorm=4.644e-04 | alpha=1.00e-01 | stepNorm=2.69e-03
+LBFGS 1800 | loss=1.866e-05 | gradNorm=8.425e-04 | alpha=1.00e-01 | stepNorm=1.46e-03
+LBFGS 2100 | loss=1.524e-05 | gradNorm=1.843e-04 | alpha=1.00e-01 | stepNorm=1.73e-03
+LBFGS 2400 | loss=1.337e-05 | gradNorm=1.726e-04 | alpha=1.00e-01 | stepNorm=2.65e-03
+LBFGS 2700 | loss=1.184e-05 | gradNorm=4.064e-04 | alpha=1.00e-01 | stepNorm=2.74e-03
+LBFGS 3000 | loss=1.092e-05 | gradNorm=1.029e-03 | alpha=1.00e-01 | stepNorm=1.36e-03
+LBFGS 3300 | loss=9.820e-06 | gradNorm=1.956e-04 | alpha=1.00e-01 | stepNorm=4.39e-04
+LBFGS 3600 | loss=8.987e-06 | gradNorm=1.196e-04 | alpha=1.00e-01 | stepNorm=1.72e-04
+LBFGS 3900 | loss=7.818e-06 | gradNorm=1.351e-04 | alpha=1.00e-01 | stepNorm=1.30e-03
+LBFGS 4200 | loss=7.277e-06 | gradNorm=6.506e-05 | alpha=1.00e-01 | stepNorm=4.57e-04
+LBFGS 4500 | loss=6.793e-06 | gradNorm=2.365e-04 | alpha=1.00e-01 | stepNorm=6.67e-04
+LBFGS 4800 | loss=6.522e-06 | gradNorm=1.775e-04 | alpha=1.00e-01 | stepNorm=5.25e-04
+LBFGS 5100 | loss=6.402e-06 | gradNorm=1.197e-04 | alpha=1.00e-01 | stepNorm=1.84e-04
+LBFGS 5400 | loss=6.270e-06 | gradNorm=6.400e-05 | alpha=1.00e-01 | stepNorm=6.34e-04
+LBFGS 5700 | loss=6.131e-06 | gradNorm=9.682e-05 | alpha=1.00e-01 | stepNorm=1.05e-04
+LBFGS 6000 | loss=5.889e-06 | gradNorm=1.145e-04 | alpha=1.00e-01 | stepNorm=1.75e-04
+LBFGS 6300 | loss=5.719e-06 | gradNorm=2.603e-05 | alpha=1.00e-01 | stepNorm=1.22e-04
+LBFGS 6600 | loss=5.654e-06 | gradNorm=1.648e-04 | alpha=1.00e-01 | stepNorm=3.10e-04
+LBFGS 6900 | loss=5.581e-06 | gradNorm=1.856e-04 | alpha=1.00e-01 | stepNorm=3.03e-04
+LBFGS 7200 | loss=5.549e-06 | gradNorm=6.859e-05 | alpha=1.00e-01 | stepNorm=2.28e-04
+LBFGS 7500 | loss=5.442e-06 | gradNorm=1.498e-04 | alpha=1.00e-01 | stepNorm=1.05e-03
+LBFGS 7800 | loss=5.319e-06 | gradNorm=4.797e-05 | alpha=1.00e-01 | stepNorm=4.40e-04
+LBFGS 8100 | loss=5.263e-06 | gradNorm=1.549e-04 | alpha=1.00e-01 | stepNorm=7.85e-05
+LBFGS 8400 | loss=5.214e-06 | gradNorm=7.086e-05 | alpha=1.00e-01 | stepNorm=6.64e-05
+LBFGS 8700 | loss=5.171e-06 | gradNorm=5.292e-05 | alpha=1.00e-01 | stepNorm=1.22e-05
+LBFGS 9000 | loss=5.104e-06 | gradNorm=7.291e-05 | alpha=1.00e-01 | stepNorm=7.83e-05
+LBFGS 9300 | loss=5.046e-06 | gradNorm=1.749e-04 | alpha=1.00e-01 | stepNorm=2.99e-04
+LBFGS 9600 | loss=5.001e-06 | gradNorm=2.052e-04 | alpha=1.00e-01 | stepNorm=1.11e-04
+LBFGS 9900 | loss=4.958e-06 | gradNorm=6.613e-05 | alpha=1.00e-01 | stepNorm=2.78e-05
+LBFGS 10200 | loss=4.933e-06 | gradNorm=9.042e-05 | alpha=1.00e-01 | stepNorm=2.03e-04
+LBFGS 10500 | loss=4.873e-06 | gradNorm=8.340e-05 | alpha=1.00e-01 | stepNorm=8.52e-05
+LBFGS 10800 | loss=4.796e-06 | gradNorm=4.419e-04 | alpha=1.00e-01 | stepNorm=2.63e-04
+LBFGS 11100 | loss=4.683e-06 | gradNorm=1.592e-04 | alpha=1.00e-01 | stepNorm=7.76e-05
+LBFGS 11400 | loss=4.641e-06 | gradNorm=3.150e-05 | alpha=1.00e-01 | stepNorm=3.41e-04
+LBFGS 11700 | loss=4.596e-06 | gradNorm=2.751e-05 | alpha=1.00e-01 | stepNorm=1.02e-04
+LBFGS 12000 | loss=4.566e-06 | gradNorm=4.318e-05 | alpha=1.00e-01 | stepNorm=3.60e-05
+LBFGS 12300 | loss=4.509e-06 | gradNorm=9.278e-05 | alpha=1.00e-01 | stepNorm=3.16e-04
+LBFGS 12600 | loss=4.417e-06 | gradNorm=5.553e-05 | alpha=1.00e-01 | stepNorm=1.76e-04
+LBFGS 12900 | loss=4.320e-06 | gradNorm=1.120e-04 | alpha=1.00e-01 | stepNorm=1.57e-03
+LBFGS 13200 | loss=4.240e-06 | gradNorm=5.737e-05 | alpha=1.00e-01 | stepNorm=3.40e-04
+LBFGS 13500 | loss=4.161e-06 | gradNorm=6.869e-05 | alpha=1.00e-01 | stepNorm=3.13e-05
+LBFGS 13800 | loss=4.087e-06 | gradNorm=7.720e-05 | alpha=1.00e-01 | stepNorm=6.96e-05
+LBFGS 14100 | loss=3.974e-06 | gradNorm=9.779e-05 | alpha=1.00e-01 | stepNorm=1.75e-04
+LBFGS 14400 | loss=3.817e-06 | gradNorm=2.520e-04 | alpha=1.00e-01 | stepNorm=6.60e-05
+LBFGS 14700 | loss=3.726e-06 | gradNorm=7.899e-05 | alpha=1.00e-01 | stepNorm=8.10e-04
+LBFGS 15000 | loss=3.619e-06 | gradNorm=3.171e-04 | alpha=1.00e-01 | stepNorm=2.84e-03
+LBFGS done | iters=15000 | reason=maxIters | ls_failures=0
+  [A (BINN, std)] LBFGS: loss=3.620e-06 | d_err=0.5076 | iL2=3.336e-03 | γ=[+0.000,+0.000,+0.000,+0.000,+0.000,+0.000]
+
+  A (BINN, std) final:
+    Density rel-diff : 0.5076
+    Interior L2      : 3.486e-03
+    γ error          : 1.0000
+    γ final          : [+0.0000, +0.0000, +0.0000, +0.0000, +0.0000, +0.0000]
+    LBFGS reason     : maxIters
+    Wall time        : 328.1s
+
+==================================================================
+  Case B (SE-BINN, std)
+==================================================================
+  trainable params: 19767  (gamma trainable)
+  [B (SE-BINN, std)] init: loss=2.310e-02 | d_err=1.0014 | iL2=1.084e+00 | γ=[+0.000,+0.000,+0.000,+0.000,+0.000,+0.000]
+phase 1/1 | iters=1000 | lr=1.0e-03 | Nb=2304
+  Adam    1 | loss=2.310e-02 | mse_unsc=2.310e-02 | gamma=[0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000] | phase=1
+  Adam  200 | loss=5.201e-03 | mse_unsc=5.201e-03 | gamma=[0.1205, -0.1432, 0.1197, 0.0330, -0.0811, 0.0323] | phase=1
+  Adam  400 | loss=8.509e-04 | mse_unsc=8.509e-04 | gamma=[0.1489, -0.1918, 0.1496, -0.0192, 0.0035, -0.0146] | phase=1
+  Adam  600 | loss=7.056e-04 | mse_unsc=7.056e-04 | gamma=[0.1555, -0.2275, 0.1568, -0.0520, 0.1124, -0.0483] | phase=1
+  Adam  800 | loss=5.937e-04 | mse_unsc=5.937e-04 | gamma=[0.1651, -0.2673, 0.1671, -0.0766, 0.2196, -0.0746] | phase=1
+  Adam 1000 | loss=4.975e-04 | mse_unsc=4.975e-04 | gamma=[0.1751, -0.3090, 0.1779, -0.0973, 0.3230, -0.0972] | phase=1
+Adam done | total_iters=1000 | final_loss=4.975e-04
+  [B (SE-BINN, std)] Adam-ph1: loss=4.975e-04 | d_err=0.7077 | iL2=9.814e-02 | γ=[+0.175,-0.309,+0.178,-0.097,+0.324,-0.097]
+phase 1/1 | iters=1000 | lr=3.0e-04 | Nb=2304
+  Adam    1 | loss=5.009e-04 | mse_unsc=5.009e-04 | gamma=[0.1751, -0.3093, 0.1780, -0.0974, 0.3236, -0.0973] | phase=1
+  Adam  200 | loss=4.712e-04 | mse_unsc=4.712e-04 | gamma=[0.1779, -0.3217, 0.1810, -0.1012, 0.3474, -0.1015] | phase=1
+  Adam  400 | loss=4.337e-04 | mse_unsc=4.337e-04 | gamma=[0.1826, -0.3432, 0.1862, -0.1078, 0.3842, -0.1089] | phase=1
+  Adam  600 | loss=3.880e-04 | mse_unsc=3.880e-04 | gamma=[0.1888, -0.3694, 0.1930, -0.1152, 0.4253, -0.1177] | phase=1
+  Adam  800 | loss=3.352e-04 | mse_unsc=3.352e-04 | gamma=[0.1957, -0.3979, 0.2010, -0.1211, 0.4670, -0.1255] | phase=1
+  Adam 1000 | loss=2.835e-04 | mse_unsc=2.835e-04 | gamma=[0.2020, -0.4268, 0.2095, -0.1258, 0.5075, -0.1318] | phase=1
+Adam done | total_iters=1000 | final_loss=2.835e-04
+  [B (SE-BINN, std)] Adam-ph2: loss=2.835e-04 | d_err=0.6694 | iL2=7.258e-02 | γ=[+0.202,-0.427,+0.210,-0.126,+0.508,-0.132]
+phase 1/1 | iters=1000 | lr=1.0e-04 | Nb=2304
+  Adam    1 | loss=2.834e-04 | mse_unsc=2.834e-04 | gamma=[0.2021, -0.4270, 0.2095, -0.1258, 0.5077, -0.1318] | phase=1
+  Adam  200 | loss=2.731e-04 | mse_unsc=2.731e-04 | gamma=[0.2031, -0.4333, 0.2110, -0.1268, 0.5187, -0.1331] | phase=1
+  Adam  400 | loss=2.575e-04 | mse_unsc=2.575e-04 | gamma=[0.2047, -0.4436, 0.2136, -0.1286, 0.5343, -0.1356] | phase=1
+  Adam  600 | loss=2.398e-04 | mse_unsc=2.398e-04 | gamma=[0.2066, -0.4557, 0.2170, -0.1314, 0.5509, -0.1392] | phase=1
+  Adam  800 | loss=2.211e-04 | mse_unsc=2.211e-04 | gamma=[0.2085, -0.4687, 0.2209, -0.1352, 0.5677, -0.1439] | phase=1
+  Adam 1000 | loss=2.014e-04 | mse_unsc=2.014e-04 | gamma=[0.2103, -0.4820, 0.2253, -0.1403, 0.5843, -0.1495] | phase=1
+Adam done | total_iters=1000 | final_loss=2.014e-04
+  [B (SE-BINN, std)] Adam-ph3: loss=2.014e-04 | d_err=0.6535 | iL2=5.886e-02 | γ=[+0.210,-0.482,+0.225,-0.140,+0.584,-0.150]
+LBFGS    1 | loss=2.013e-04 | gradNorm=3.659e-04 | alpha=1.00e-01 | stepNorm=3.66e-05
+LBFGS  300 | loss=5.035e-05 | gradNorm=1.369e-04 | alpha=1.00e-01 | stepNorm=7.77e-04
+LBFGS  600 | loss=2.489e-05 | gradNorm=8.363e-04 | alpha=1.00e-01 | stepNorm=1.88e-03
+LBFGS  900 | loss=1.780e-05 | gradNorm=2.205e-04 | alpha=1.00e-01 | stepNorm=1.02e-03
+LBFGS 1200 | loss=1.583e-05 | gradNorm=1.633e-04 | alpha=1.00e-01 | stepNorm=5.85e-03
+LBFGS 1500 | loss=1.247e-05 | gradNorm=6.901e-05 | alpha=1.00e-01 | stepNorm=1.02e-04
+LBFGS 1800 | loss=1.135e-05 | gradNorm=2.781e-04 | alpha=1.00e-01 | stepNorm=1.03e-03
+LBFGS 2100 | loss=1.074e-05 | gradNorm=1.131e-04 | alpha=1.00e-01 | stepNorm=5.40e-04
+LBFGS 2400 | loss=1.030e-05 | gradNorm=5.740e-05 | alpha=1.00e-01 | stepNorm=1.12e-04
+LBFGS 2700 | loss=9.638e-06 | gradNorm=1.054e-04 | alpha=1.00e-01 | stepNorm=1.50e-04
+LBFGS 3000 | loss=9.209e-06 | gradNorm=1.796e-04 | alpha=1.00e-01 | stepNorm=3.79e-04
+LBFGS 3300 | loss=8.075e-06 | gradNorm=1.827e-04 | alpha=1.00e-01 | stepNorm=4.15e-04
+LBFGS 3600 | loss=7.197e-06 | gradNorm=5.150e-05 | alpha=1.00e-01 | stepNorm=5.40e-04
+LBFGS 3900 | loss=6.307e-06 | gradNorm=2.653e-04 | alpha=1.00e-01 | stepNorm=7.07e-04
+LBFGS 4200 | loss=5.907e-06 | gradNorm=6.119e-05 | alpha=1.00e-01 | stepNorm=6.16e-04
+LBFGS 4500 | loss=5.656e-06 | gradNorm=3.090e-05 | alpha=1.00e-01 | stepNorm=2.22e-04
+LBFGS 4800 | loss=5.350e-06 | gradNorm=8.294e-05 | alpha=1.00e-01 | stepNorm=1.44e-03
+LBFGS 5100 | loss=4.929e-06 | gradNorm=9.959e-05 | alpha=1.00e-01 | stepNorm=9.70e-04
+LBFGS 5400 | loss=4.633e-06 | gradNorm=2.381e-04 | alpha=1.00e-01 | stepNorm=2.52e-03
+LBFGS 5700 | loss=4.160e-06 | gradNorm=2.495e-04 | alpha=1.00e-01 | stepNorm=6.76e-04
+LBFGS 6000 | loss=3.822e-06 | gradNorm=3.749e-05 | alpha=1.00e-01 | stepNorm=9.83e-05
+LBFGS 6300 | loss=3.438e-06 | gradNorm=7.322e-05 | alpha=1.00e-01 | stepNorm=8.22e-04
+LBFGS 6600 | loss=2.968e-06 | gradNorm=1.223e-04 | alpha=1.00e-01 | stepNorm=2.32e-04
+LBFGS 6900 | loss=2.447e-06 | gradNorm=7.484e-05 | alpha=1.00e-01 | stepNorm=2.29e-04
+LBFGS 7200 | loss=2.192e-06 | gradNorm=1.252e-04 | alpha=1.00e-01 | stepNorm=3.47e-04
+LBFGS 7500 | loss=2.020e-06 | gradNorm=3.110e-05 | alpha=1.00e-01 | stepNorm=1.51e-04
+LBFGS 7800 | loss=1.889e-06 | gradNorm=5.429e-05 | alpha=1.00e-01 | stepNorm=2.10e-04
+LBFGS 8100 | loss=1.769e-06 | gradNorm=1.912e-05 | alpha=1.00e-01 | stepNorm=2.40e-04
+LBFGS 8400 | loss=1.697e-06 | gradNorm=8.902e-05 | alpha=1.00e-01 | stepNorm=2.35e-04
+LBFGS 8700 | loss=1.561e-06 | gradNorm=3.128e-05 | alpha=1.00e-01 | stepNorm=1.28e-04
+LBFGS 9000 | loss=1.496e-06 | gradNorm=8.018e-05 | alpha=1.00e-01 | stepNorm=1.76e-04
+LBFGS 9300 | loss=1.434e-06 | gradNorm=9.328e-05 | alpha=1.00e-01 | stepNorm=1.16e-04
+LBFGS 9600 | loss=1.434e-06 | gradNorm=1.727e-05 | alpha=1.00e-01 | stepNorm=4.94e-07
+LBFGS 9900 | loss=1.433e-06 | gradNorm=1.460e-05 | alpha=1.00e-01 | stepNorm=4.96e-07
+LBFGS 10200 | loss=1.433e-06 | gradNorm=1.298e-05 | alpha=1.00e-01 | stepNorm=4.74e-07
+LBFGS 10500 | loss=1.433e-06 | gradNorm=1.192e-05 | alpha=1.00e-01 | stepNorm=4.47e-07
+LBFGS 10800 | loss=1.433e-06 | gradNorm=1.117e-05 | alpha=1.00e-01 | stepNorm=4.19e-07
+LBFGS 11100 | loss=1.433e-06 | gradNorm=1.062e-05 | alpha=1.00e-01 | stepNorm=3.92e-07
+LBFGS 11400 | loss=1.433e-06 | gradNorm=1.018e-05 | alpha=1.00e-01 | stepNorm=3.66e-07
+LBFGS 11700 | loss=1.433e-06 | gradNorm=9.823e-06 | alpha=1.00e-01 | stepNorm=3.43e-07
+LBFGS 12000 | loss=1.433e-06 | gradNorm=9.518e-06 | alpha=1.00e-01 | stepNorm=3.22e-07
+LBFGS 12300 | loss=1.433e-06 | gradNorm=9.253e-06 | alpha=1.00e-01 | stepNorm=3.04e-07
+LBFGS 12600 | loss=1.433e-06 | gradNorm=9.018e-06 | alpha=1.00e-01 | stepNorm=2.87e-07
+LBFGS 12900 | loss=1.433e-06 | gradNorm=8.807e-06 | alpha=1.00e-01 | stepNorm=2.71e-07
+LBFGS 13200 | loss=1.432e-06 | gradNorm=8.615e-06 | alpha=1.00e-01 | stepNorm=2.57e-07
+LBFGS 13500 | loss=1.432e-06 | gradNorm=8.440e-06 | alpha=1.00e-01 | stepNorm=2.45e-07
+LBFGS 13800 | loss=1.432e-06 | gradNorm=8.280e-06 | alpha=1.00e-01 | stepNorm=2.34e-07
+LBFGS 14100 | loss=1.432e-06 | gradNorm=8.131e-06 | alpha=1.00e-01 | stepNorm=2.23e-07
+LBFGS 14400 | loss=1.432e-06 | gradNorm=7.994e-06 | alpha=1.00e-01 | stepNorm=2.14e-07
+LBFGS 14700 | loss=1.432e-06 | gradNorm=7.866e-06 | alpha=1.00e-01 | stepNorm=2.05e-07
+LBFGS 15000 | loss=1.432e-06 | gradNorm=7.747e-06 | alpha=1.00e-01 | stepNorm=1.98e-07
+LBFGS done | iters=15000 | reason=maxIters | ls_failures=0
+  [B (SE-BINN, std)] LBFGS: loss=1.432e-06 | d_err=0.4673 | iL2=2.307e-03 | γ=[+1.026,-0.239,+0.982,-0.625,+1.315,-0.587]
+
+  B (SE-BINN, std) final:
+    Density rel-diff : 0.4673
+    Interior L2      : 2.092e-03
+    γ error          : 0.2261
+    γ final          : [+1.0264, -0.2393, +0.9825, -0.6254, +1.3154, -0.5874]
+    LBFGS reason     : maxIters
+    Wall time        : 367.4s
+
+==================================================================
+  Case C (SE-BINN, V⁻¹)
+==================================================================
+  trainable params: 19767  (gamma trainable)
+  [C (SE-BINN, V⁻¹)] init: loss=3.226e+00 | d_err=1.0014 | iL2=1.084e+00 | γ=[+0.000,+0.000,+0.000,+0.000,+0.000,+0.000]
+phase 1/1 | iters=1000 | lr=1.0e-03 | Nb=2304
+  Adam    1 | loss=3.226e+00 | mse_unsc=nan | gamma=[0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000] | phase=1
+  Adam  200 | loss=1.484e+00 | mse_unsc=nan | gamma=[0.1078, -0.1458, 0.1086, -0.1695, 0.2116, -0.1730] | phase=1
+  Adam  400 | loss=1.039e+00 | mse_unsc=nan | gamma=[0.1783, -0.2009, 0.1835, -0.2582, 0.3400, -0.2486] | phase=1
+  Adam  600 | loss=9.482e-01 | mse_unsc=nan | gamma=[0.2424, -0.2668, 0.2504, -0.2810, 0.3991, -0.2772] | phase=1
+  Adam  800 | loss=8.709e-01 | mse_unsc=nan | gamma=[0.3121, -0.3362, 0.3169, -0.3068, 0.4540, -0.3172] | phase=1
+  Adam 1000 | loss=8.066e-01 | mse_unsc=nan | gamma=[0.3829, -0.3958, 0.3832, -0.3347, 0.5044, -0.3535] | phase=1
+Adam done | total_iters=1000 | final_loss=8.066e-01
+  [C (SE-BINN, V⁻¹)] Adam-ph1: loss=8.066e-01 | d_err=0.5006 | iL2=4.488e-02 | γ=[+0.383,-0.396,+0.384,-0.335,+0.505,-0.354]
+phase 1/1 | iters=1000 | lr=3.0e-04 | Nb=2304
+  Adam    1 | loss=8.063e-01 | mse_unsc=nan | gamma=[0.3833, -0.3961, 0.3836, -0.3348, 0.5046, -0.3536] | phase=1
+  Adam  200 | loss=7.801e-01 | mse_unsc=nan | gamma=[0.4304, -0.4343, 0.4314, -0.3634, 0.5565, -0.3788] | phase=1
+  Adam  400 | loss=7.444e-01 | mse_unsc=nan | gamma=[0.4827, -0.4713, 0.4841, -0.3992, 0.6076, -0.4044] | phase=1
+  Adam  600 | loss=7.069e-01 | mse_unsc=nan | gamma=[0.5337, -0.4964, 0.5348, -0.4279, 0.6542, -0.4171] | phase=1
+  Adam  800 | loss=6.729e-01 | mse_unsc=nan | gamma=[0.5822, -0.5030, 0.5826, -0.4459, 0.6946, -0.4250] | phase=1
+  Adam 1000 | loss=6.400e-01 | mse_unsc=nan | gamma=[0.6282, -0.4917, 0.6277, -0.4577, 0.7319, -0.4334] | phase=1
+Adam done | total_iters=1000 | final_loss=6.400e-01
+  [C (SE-BINN, V⁻¹)] Adam-ph2: loss=6.400e-01 | d_err=0.4460 | iL2=3.607e-02 | γ=[+0.628,-0.492,+0.628,-0.458,+0.732,-0.433]
+phase 1/1 | iters=1000 | lr=1.0e-04 | Nb=2304
+  Adam    1 | loss=6.399e-01 | mse_unsc=nan | gamma=[0.6284, -0.4916, 0.6279, -0.4577, 0.7320, -0.4335] | phase=1
+  Adam  200 | loss=6.319e-01 | mse_unsc=nan | gamma=[0.6442, -0.4865, 0.6436, -0.4602, 0.7466, -0.4358] | phase=1
+  Adam  400 | loss=6.197e-01 | mse_unsc=nan | gamma=[0.6624, -0.4760, 0.6618, -0.4624, 0.7636, -0.4383] | phase=1
+  Adam  600 | loss=6.050e-01 | mse_unsc=nan | gamma=[0.6807, -0.4613, 0.6800, -0.4623, 0.7809, -0.4393] | phase=1
+  Adam  800 | loss=5.920e-01 | mse_unsc=nan | gamma=[0.6986, -0.4436, 0.6978, -0.4585, 0.7980, -0.4384] | phase=1
+  Adam 1000 | loss=5.742e-01 | mse_unsc=nan | gamma=[0.7162, -0.4248, 0.7152, -0.4537, 0.8140, -0.4367] | phase=1
+Adam done | total_iters=1000 | final_loss=5.742e-01
+  [C (SE-BINN, V⁻¹)] Adam-ph3: loss=5.742e-01 | d_err=0.4225 | iL2=3.386e-02 | γ=[+0.716,-0.425,+0.715,-0.454,+0.814,-0.437]
+LBFGS    1 | loss=5.741e-01 | gradNorm=1.859e+00 | alpha=1.00e-01 | stepNorm=7.36e-03
+LBFGS  300 | loss=3.968e-01 | gradNorm=8.842e-01 | alpha=1.00e-01 | stepNorm=2.76e-02
+LBFGS  600 | loss=2.306e-01 | gradNorm=1.587e+00 | alpha=1.00e-01 | stepNorm=2.99e-02
+LBFGS  900 | loss=1.724e-01 | gradNorm=8.013e-01 | alpha=1.00e-01 | stepNorm=7.68e-03
+LBFGS 1200 | loss=1.348e-01 | gradNorm=1.235e+00 | alpha=1.00e-01 | stepNorm=1.02e-02
+LBFGS 1500 | loss=9.965e-02 | gradNorm=2.040e+00 | alpha=1.00e-01 | stepNorm=1.08e-02
+LBFGS 1800 | loss=8.150e-02 | gradNorm=9.226e-01 | alpha=1.00e-01 | stepNorm=2.26e-03
+LBFGS 2100 | loss=6.697e-02 | gradNorm=3.382e-01 | alpha=1.00e-01 | stepNorm=9.38e-04
+LBFGS 2400 | loss=5.516e-02 | gradNorm=3.370e-01 | alpha=1.00e-01 | stepNorm=1.47e-03
+LBFGS 2700 | loss=4.762e-02 | gradNorm=5.182e-01 | alpha=1.00e-01 | stepNorm=2.92e-03
+LBFGS 3000 | loss=4.124e-02 | gradNorm=6.487e-01 | alpha=1.00e-01 | stepNorm=2.65e-03
+LBFGS 3300 | loss=3.631e-02 | gradNorm=3.439e-01 | alpha=1.00e-01 | stepNorm=1.76e-03
+LBFGS 3600 | loss=3.169e-02 | gradNorm=2.431e-01 | alpha=1.00e-01 | stepNorm=4.83e-03
+LBFGS 3900 | loss=2.937e-02 | gradNorm=2.959e-01 | alpha=1.00e-01 | stepNorm=1.44e-03
+LBFGS 4200 | loss=2.663e-02 | gradNorm=5.436e-01 | alpha=1.00e-01 | stepNorm=1.60e-03
+LBFGS 4500 | loss=2.427e-02 | gradNorm=1.220e-01 | alpha=1.00e-01 | stepNorm=3.24e-03
+LBFGS 4800 | loss=2.244e-02 | gradNorm=2.092e-01 | alpha=1.00e-01 | stepNorm=6.83e-03
+LBFGS 5100 | loss=2.008e-02 | gradNorm=2.827e-01 | alpha=1.00e-01 | stepNorm=6.31e-03
+LBFGS 5400 | loss=1.722e-02 | gradNorm=3.377e-01 | alpha=1.00e-01 | stepNorm=4.62e-03
+LBFGS 5700 | loss=1.495e-02 | gradNorm=3.388e-01 | alpha=1.00e-01 | stepNorm=2.67e-03
+LBFGS 6000 | loss=1.338e-02 | gradNorm=3.705e-01 | alpha=1.00e-01 | stepNorm=3.74e-03
+LBFGS 6300 | loss=1.184e-02 | gradNorm=1.279e-01 | alpha=1.00e-01 | stepNorm=5.42e-04
+LBFGS 6600 | loss=1.050e-02 | gradNorm=3.394e-01 | alpha=1.00e-01 | stepNorm=3.16e-04
+LBFGS 6900 | loss=9.388e-03 | gradNorm=1.597e-01 | alpha=1.00e-01 | stepNorm=3.07e-03
+LBFGS 7200 | loss=8.391e-03 | gradNorm=1.337e-01 | alpha=1.00e-01 | stepNorm=1.97e-03
+LBFGS 7500 | loss=7.686e-03 | gradNorm=1.583e-01 | alpha=1.00e-01 | stepNorm=2.49e-03
+LBFGS 7800 | loss=6.830e-03 | gradNorm=5.853e-01 | alpha=1.00e-01 | stepNorm=1.08e-02
+LBFGS 8100 | loss=6.135e-03 | gradNorm=2.705e-01 | alpha=1.00e-01 | stepNorm=1.65e-03
+LBFGS 8400 | loss=5.517e-03 | gradNorm=8.637e-02 | alpha=1.00e-01 | stepNorm=1.27e-04
+LBFGS 8700 | loss=5.062e-03 | gradNorm=5.307e-01 | alpha=1.00e-01 | stepNorm=1.67e-03
+LBFGS 9000 | loss=4.673e-03 | gradNorm=1.112e-01 | alpha=1.00e-01 | stepNorm=1.02e-03
+LBFGS 9300 | loss=4.365e-03 | gradNorm=1.749e-01 | alpha=1.00e-01 | stepNorm=2.74e-03
+LBFGS 9600 | loss=4.000e-03 | gradNorm=1.429e-01 | alpha=1.00e-01 | stepNorm=1.23e-03
+LBFGS 9900 | loss=3.745e-03 | gradNorm=6.997e-02 | alpha=1.00e-01 | stepNorm=1.45e-04
+LBFGS 10200 | loss=3.581e-03 | gradNorm=6.690e-02 | alpha=1.00e-01 | stepNorm=1.44e-04
+LBFGS 10500 | loss=3.346e-03 | gradNorm=7.314e-02 | alpha=1.00e-01 | stepNorm=3.70e-04
+LBFGS 10800 | loss=3.224e-03 | gradNorm=3.908e-02 | alpha=1.00e-01 | stepNorm=2.32e-04
+LBFGS 11100 | loss=3.050e-03 | gradNorm=9.836e-02 | alpha=1.00e-01 | stepNorm=1.18e-04
+LBFGS 11400 | loss=2.949e-03 | gradNorm=7.555e-02 | alpha=1.00e-01 | stepNorm=1.18e-03
+LBFGS 11700 | loss=2.837e-03 | gradNorm=2.393e-01 | alpha=1.00e-01 | stepNorm=4.66e-04
+LBFGS 12000 | loss=2.667e-03 | gradNorm=9.944e-02 | alpha=1.00e-01 | stepNorm=3.33e-04
+LBFGS 12300 | loss=2.579e-03 | gradNorm=1.990e-01 | alpha=1.00e-01 | stepNorm=5.94e-04
+LBFGS 12600 | loss=2.515e-03 | gradNorm=7.677e-02 | alpha=1.00e-01 | stepNorm=7.17e-04
+LBFGS 12900 | loss=2.441e-03 | gradNorm=1.918e-01 | alpha=1.00e-01 | stepNorm=1.12e-03
+LBFGS 13200 | loss=2.349e-03 | gradNorm=4.499e-02 | alpha=1.00e-01 | stepNorm=1.20e-04
+LBFGS 13500 | loss=2.299e-03 | gradNorm=3.692e-02 | alpha=1.00e-01 | stepNorm=3.52e-04
+LBFGS 13800 | loss=2.270e-03 | gradNorm=7.788e-02 | alpha=1.00e-01 | stepNorm=6.82e-05
+LBFGS 14100 | loss=2.222e-03 | gradNorm=7.718e-02 | alpha=1.00e-01 | stepNorm=1.55e-04
+LBFGS 14400 | loss=2.178e-03 | gradNorm=9.397e-02 | alpha=1.00e-01 | stepNorm=2.13e-04
+LBFGS 14700 | loss=2.125e-03 | gradNorm=8.323e-02 | alpha=1.00e-01 | stepNorm=5.41e-04
+LBFGS 15000 | loss=2.074e-03 | gradNorm=3.193e-02 | alpha=1.00e-01 | stepNorm=1.07e-04
+LBFGS done | iters=15000 | reason=maxIters | ls_failures=0
+  [C (SE-BINN, V⁻¹)] LBFGS: loss=2.074e-03 | d_err=0.0254 | iL2=8.703e-04 | γ=[+0.964,-0.440,+0.960,-0.531,+1.042,-0.532]
+
+  C (SE-BINN, V⁻¹) final:
+    Density rel-diff : 0.0254
+    Interior L2      : 8.462e-04
+    γ error          : 0.0524
+    γ final          : [+0.9642, -0.4398, +0.9596, -0.5310, +1.0421, -0.5316]
+    LBFGS reason     : maxIters
+    Wall time        : 400.6s
+
+==================================================================
+  Case D (SE-BINN, Calderón)
+==================================================================
+  trainable params: 19767  (gamma trainable)
+  [D (SE-BINN, Calderón)] init: loss=1.721e+04 | d_err=1.0014 | iL2=1.084e+00 | γ=[+0.000,+0.000,+0.000,+0.000,+0.000,+0.000]
+phase 1/1 | iters=1000 | lr=1.0e-03 | Nb=2304
+  Adam    1 | loss=1.721e+04 | mse_unsc=nan | gamma=[0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000] | phase=1
+  Adam  200 | loss=2.188e+02 | mse_unsc=nan | gamma=[0.0741, -0.1098, 0.0727, 0.0612, -0.0982, 0.0627] | phase=1
+  Adam  400 | loss=1.789e+02 | mse_unsc=nan | gamma=[0.0766, -0.1145, 0.0762, 0.0485, -0.0760, 0.0512] | phase=1
+  Adam  600 | loss=1.686e+02 | mse_unsc=nan | gamma=[0.0772, -0.1198, 0.0774, 0.0373, -0.0471, 0.0396] | phase=1
+  Adam  800 | loss=1.607e+02 | mse_unsc=nan | gamma=[0.0774, -0.1255, 0.0783, 0.0267, -0.0129, 0.0283] | phase=1
+  Adam 1000 | loss=1.521e+02 | mse_unsc=nan | gamma=[0.0776, -0.1312, 0.0793, 0.0173, 0.0257, 0.0181] | phase=1
+Adam done | total_iters=1000 | final_loss=1.521e+02
+  [D (SE-BINN, Calderón)] Adam-ph1: loss=1.521e+02 | d_err=0.7633 | iL2=2.536e-01 | γ=[+0.078,-0.131,+0.079,+0.017,+0.026,+0.018]
+phase 1/1 | iters=1000 | lr=3.0e-04 | Nb=2304
+  Adam    1 | loss=1.520e+02 | mse_unsc=nan | gamma=[0.0776, -0.1312, 0.0793, 0.0173, 0.0259, 0.0180] | phase=1
+  Adam  200 | loss=1.486e+02 | mse_unsc=nan | gamma=[0.0774, -0.1333, 0.0799, 0.0148, 0.0384, 0.0153] | phase=1
+  Adam  400 | loss=1.439e+02 | mse_unsc=nan | gamma=[0.0774, -0.1366, 0.0803, 0.0111, 0.0601, 0.0112] | phase=1
+  Adam  600 | loss=1.381e+02 | mse_unsc=nan | gamma=[0.0776, -0.1409, 0.0811, 0.0067, 0.0876, 0.0062] | phase=1
+  Adam  800 | loss=1.315e+02 | mse_unsc=nan | gamma=[0.0780, -0.1462, 0.0822, 0.0019, 0.1194, 0.0008] | phase=1
+  Adam 1000 | loss=1.243e+02 | mse_unsc=nan | gamma=[0.0787, -0.1525, 0.0838, -0.0031, 0.1543, -0.0050] | phase=1
+Adam done | total_iters=1000 | final_loss=1.243e+02
+  [D (SE-BINN, Calderón)] Adam-ph2: loss=1.243e+02 | d_err=0.7376 | iL2=2.300e-01 | γ=[+0.079,-0.153,+0.084,-0.003,+0.154,-0.005]
+phase 1/1 | iters=1000 | lr=1.0e-04 | Nb=2304
+  Adam    1 | loss=1.243e+02 | mse_unsc=nan | gamma=[0.0787, -0.1526, 0.0839, -0.0031, 0.1544, -0.0051] | phase=1
+  Adam  200 | loss=1.214e+02 | mse_unsc=nan | gamma=[0.0791, -0.1554, 0.0847, -0.0052, 0.1667, -0.0075] | phase=1
+  Adam  400 | loss=1.176e+02 | mse_unsc=nan | gamma=[0.0797, -0.1603, 0.0861, -0.0086, 0.1832, -0.0115] | phase=1
+  Adam  600 | loss=1.134e+02 | mse_unsc=nan | gamma=[0.0807, -0.1668, 0.0881, -0.0131, 0.2009, -0.0166] | phase=1
+  Adam  800 | loss=1.093e+02 | mse_unsc=nan | gamma=[0.0817, -0.1731, 0.0901, -0.0174, 0.2181, -0.0214] | phase=1
+  Adam 1000 | loss=1.053e+02 | mse_unsc=nan | gamma=[0.0827, -0.1787, 0.0920, -0.0214, 0.2350, -0.0259] | phase=1
+Adam done | total_iters=1000 | final_loss=1.053e+02
+  [D (SE-BINN, Calderón)] Adam-ph3: loss=1.053e+02 | d_err=0.7203 | iL2=2.079e-01 | γ=[+0.083,-0.179,+0.092,-0.021,+0.235,-0.026]
+LBFGS    1 | loss=1.052e+02 | gradNorm=1.604e+03 | alpha=2.44e-05 | stepNorm=2.42e-03
+LBFGS  300 | loss=3.001e+01 | gradNorm=1.342e+02 | alpha=1.00e-01 | stepNorm=5.09e-03
+LBFGS  600 | loss=1.410e+01 | gradNorm=2.152e+02 | alpha=1.00e-01 | stepNorm=2.95e-03
+LBFGS  900 | loss=8.218e+00 | gradNorm=1.067e+02 | alpha=1.00e-01 | stepNorm=1.36e-04
+LBFGS 1200 | loss=7.291e+00 | gradNorm=5.295e+02 | alpha=1.00e-01 | stepNorm=1.60e-03
+LBFGS 1500 | loss=6.311e+00 | gradNorm=8.163e+01 | alpha=1.00e-01 | stepNorm=2.87e-03
+LBFGS 1800 | loss=5.698e+00 | gradNorm=7.142e+01 | alpha=1.00e-01 | stepNorm=1.99e-03
+LBFGS 2100 | loss=4.811e+00 | gradNorm=3.413e+01 | alpha=1.00e-01 | stepNorm=1.08e-03
+LBFGS 2400 | loss=4.628e+00 | gradNorm=3.820e+01 | alpha=1.00e-01 | stepNorm=1.05e-03
+LBFGS 2700 | loss=4.462e+00 | gradNorm=7.868e+01 | alpha=1.00e-01 | stepNorm=1.28e-03
+LBFGS 3000 | loss=4.307e+00 | gradNorm=6.456e+01 | alpha=1.00e-01 | stepNorm=1.30e-03
+LBFGS 3300 | loss=4.177e+00 | gradNorm=2.330e+01 | alpha=1.00e-01 | stepNorm=3.58e-04
+LBFGS 3600 | loss=3.995e+00 | gradNorm=5.323e+01 | alpha=1.00e-01 | stepNorm=4.17e-04
+LBFGS 3900 | loss=3.762e+00 | gradNorm=6.243e+01 | alpha=1.00e-01 | stepNorm=1.87e-03
+LBFGS 4200 | loss=3.675e+00 | gradNorm=8.860e+01 | alpha=1.00e-01 | stepNorm=5.19e-04
+LBFGS 4500 | loss=3.589e+00 | gradNorm=1.208e+02 | alpha=1.00e-01 | stepNorm=2.08e-03
+LBFGS 4800 | loss=3.472e+00 | gradNorm=7.659e+01 | alpha=1.00e-01 | stepNorm=1.18e-03
+LBFGS 5100 | loss=3.046e+00 | gradNorm=3.938e+02 | alpha=1.00e-01 | stepNorm=7.50e-04
+LBFGS 5400 | loss=2.800e+00 | gradNorm=6.033e+01 | alpha=1.00e-01 | stepNorm=5.85e-04
+LBFGS 5700 | loss=2.549e+00 | gradNorm=1.968e+01 | alpha=1.00e-01 | stepNorm=3.95e-03
+LBFGS 6000 | loss=2.343e+00 | gradNorm=2.221e+02 | alpha=1.00e-01 | stepNorm=2.43e-03
+LBFGS 6300 | loss=2.154e+00 | gradNorm=5.205e+02 | alpha=1.00e-01 | stepNorm=5.07e-04
+LBFGS 6600 | loss=1.859e+00 | gradNorm=4.721e+01 | alpha=1.00e-01 | stepNorm=2.00e-03
+LBFGS 6900 | loss=1.523e+00 | gradNorm=5.350e+01 | alpha=1.00e-01 | stepNorm=3.38e-04
+LBFGS 7200 | loss=1.444e+00 | gradNorm=4.774e+01 | alpha=1.00e-01 | stepNorm=4.70e-03
+LBFGS 7500 | loss=1.355e+00 | gradNorm=3.054e+01 | alpha=1.00e-01 | stepNorm=1.98e-03
+LBFGS 7800 | loss=1.288e+00 | gradNorm=1.796e+01 | alpha=1.00e-01 | stepNorm=3.90e-04
+LBFGS 8100 | loss=1.227e+00 | gradNorm=2.839e+02 | alpha=1.00e-01 | stepNorm=1.57e-04
+LBFGS 8400 | loss=1.168e+00 | gradNorm=4.637e+01 | alpha=1.00e-01 | stepNorm=2.25e-04
+LBFGS 8700 | loss=1.127e+00 | gradNorm=9.445e+01 | alpha=1.00e-01 | stepNorm=7.06e-04
+LBFGS 9000 | loss=1.070e+00 | gradNorm=3.658e+01 | alpha=1.00e-01 | stepNorm=2.10e-04
+LBFGS 9300 | loss=1.012e+00 | gradNorm=4.124e+01 | alpha=1.00e-01 | stepNorm=3.16e-04
+LBFGS 9600 | loss=9.969e-01 | gradNorm=1.359e+01 | alpha=1.00e-01 | stepNorm=5.66e-05
+LBFGS 9900 | loss=9.567e-01 | gradNorm=5.824e+01 | alpha=1.00e-01 | stepNorm=5.85e-04
+LBFGS 10200 | loss=9.015e-01 | gradNorm=5.189e+01 | alpha=1.00e-01 | stepNorm=1.06e-04
+LBFGS 10500 | loss=8.730e-01 | gradNorm=3.136e+01 | alpha=1.00e-01 | stepNorm=1.60e-04
+LBFGS 10800 | loss=8.457e-01 | gradNorm=8.592e+01 | alpha=1.00e-01 | stepNorm=5.08e-04
+LBFGS 11100 | loss=8.305e-01 | gradNorm=1.479e+01 | alpha=1.00e-01 | stepNorm=2.22e-04
+LBFGS 11400 | loss=8.168e-01 | gradNorm=1.415e+02 | alpha=1.00e-01 | stepNorm=6.64e-04
+LBFGS 11700 | loss=7.985e-01 | gradNorm=2.410e+01 | alpha=1.00e-01 | stepNorm=4.80e-05
+LBFGS 12000 | loss=7.917e-01 | gradNorm=6.345e+01 | alpha=1.00e-01 | stepNorm=5.23e-04
+LBFGS 12300 | loss=7.745e-01 | gradNorm=1.812e+01 | alpha=1.00e-01 | stepNorm=8.48e-04
+LBFGS 12600 | loss=7.557e-01 | gradNorm=1.019e+02 | alpha=1.00e-01 | stepNorm=7.83e-05
+LBFGS 12900 | loss=7.443e-01 | gradNorm=6.268e+01 | alpha=1.00e-01 | stepNorm=5.97e-05
+LBFGS 13200 | loss=7.227e-01 | gradNorm=6.355e+00 | alpha=1.00e-01 | stepNorm=2.64e-04
+LBFGS 13500 | loss=6.989e-01 | gradNorm=5.413e+01 | alpha=1.00e-01 | stepNorm=4.33e-04
+LBFGS 13800 | loss=6.801e-01 | gradNorm=6.266e+00 | alpha=1.00e-01 | stepNorm=6.52e-05
+LBFGS 14100 | loss=6.687e-01 | gradNorm=7.449e+00 | alpha=1.00e-01 | stepNorm=3.79e-04
+LBFGS 14400 | loss=6.629e-01 | gradNorm=3.989e+01 | alpha=1.00e-01 | stepNorm=2.41e-04
+LBFGS 14700 | loss=6.493e-01 | gradNorm=5.145e+01 | alpha=1.00e-01 | stepNorm=3.78e-04
+LBFGS 15000 | loss=6.365e-01 | gradNorm=2.124e+01 | alpha=1.00e-01 | stepNorm=4.13e-04
+LBFGS done | iters=15000 | reason=maxIters | ls_failures=0
+  [D (SE-BINN, Calderón)] LBFGS: loss=6.365e-01 | d_err=0.4565 | iL2=9.954e-03 | γ=[+1.021,-0.349,+0.996,-1.375,+1.287,-1.367]
+
+  D (SE-BINN, Calderón) final:
+    Density rel-diff : 0.4565
+    Interior L2      : 9.380e-03
+    γ error          : 0.6576
+    γ final          : [+1.0208, -0.3490, +0.9955, -1.3749, +1.2867, -1.3665]
+    LBFGS reason     : maxIters
+    Wall time        : 398.3s
+
+======================================================================
+FINAL SUMMARY
+======================================================================
+  Metric                      A (BINN)   B (SE-BINN)       C (V⁻¹)  D (Calderon)
+  ----------------------------------------------------------------------
+  Density rel-diff          5.0756e-01    4.6726e-01    2.5391e-02    4.5653e-01
+  Interior rel L2           3.4859e-03    2.0917e-03    8.4615e-04    9.3796e-03
+  BIE loss (std)            3.6192e-06    1.4320e-06    5.1946e-08    8.3636e-06
+  γ error                   1.0000e+00    2.2614e-01    5.2358e-02    6.5760e-01
+  init loss                  2.310e-02     2.310e-02     3.226e+00     1.721e+04
+  Adam lr used                   1e-03         1e-03         1e-03         1e-03
+  LBFGS reason                maxIters      maxIters      maxIters      maxIters
+  Wall time (s)                  328.1         367.5         400.7         398.3
+
+  B baseline:  d_err = 0.4673
+  C (V⁻¹):    d_err = 0.0254  (18.4× improvement over B)
+  D (Calderón): d_err = 0.4565  (1.0× improvement over B)
+  D closes 2% of the gap from B to C
+  saved → /Users/ismaillabaali/SEBINN/experiments/ex1_Koch/figures/calderon_final_convergence.png
+  saved → /Users/ismaillabaali/SEBINN/experiments/ex1_Koch/figures/calderon_final_density.png
+  saved → /Users/ismaillabaali/SEBINN/experiments/ex1_Koch/figures/calderon_final_gamma.png
+  saved → /Users/ismaillabaali/SEBINN/experiments/ex1_Koch/figures/calderon_eigenvalue_comparison.png
+
+  All figures saved to /Users/ismaillabaali/SEBINN/experiments/ex1_Koch/figures/

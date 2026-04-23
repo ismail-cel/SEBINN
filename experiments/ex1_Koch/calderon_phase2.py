@@ -473,7 +473,7 @@ def main():
     # ------------------------------------------------------------------
     print("\n  Assembling T_h (direct Nyström kernel)...")
     t0 = time.perf_counter()
-    T_h     = assemble_hypersingular_direct(qdata)
+    T_h, _  = assemble_hypersingular_direct(qdata)
     T_tilde = regularise_hypersingular(T_h, wq)
     print(f"    assembly time: {time.perf_counter()-t0:.2f}s")
 

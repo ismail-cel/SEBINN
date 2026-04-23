@@ -438,7 +438,7 @@ def main():
     # 2. Assemble T_h and compute spectral scaling
     # ------------------------------------------------------------------
     print("\n  Assembling T_h...")
-    T_h     = assemble_hypersingular_direct(qdata)
+    T_h, _  = assemble_hypersingular_direct(qdata)
     T_tilde = regularise_hypersingular(T_h, wq)
 
     print("  Computing spectral radius of T̃...")
