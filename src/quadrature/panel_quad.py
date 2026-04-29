@@ -21,7 +21,7 @@ Design notes
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import List
+from typing import List, Optional
 
 import numpy as np
 
@@ -66,6 +66,8 @@ class QuadratureData:
     L_panel: np.ndarray      # (Npan,)
     idx_std: List[np.ndarray]
     p: int
+    pan_za: Optional[np.ndarray] = None   # complex (Npan,) — panel start vertex
+    pan_zb: Optional[np.ndarray] = None   # complex (Npan,) — panel end vertex
 
     @property
     def n_quad(self) -> int:
@@ -148,6 +150,8 @@ def build_panel_quadrature(panels: List[Panel], p: int) -> QuadratureData:
     s_on_panel = np.empty(Nq)
     L_panel = np.empty(Npan)
     idx_std: List[np.ndarray] = []
+    pan_za = np.empty(Npan, dtype=complex)
+    pan_zb = np.empty(Npan, dtype=complex)
 
     k = 0
     for m, pan in enumerate(panels):
@@ -155,6 +159,8 @@ def build_panel_quadrature(panels: List[Panel], p: int) -> QuadratureData:
         b = pan.b
         L = pan.length
         L_panel[m] = L
+        pan_za[m] = a[0] + 1j * a[1]
+        pan_zb[m] = b[0] + 1j * b[1]
 
         panel_indices = np.arange(k, k + p)
         idx_std.append(panel_indices)
@@ -178,6 +184,8 @@ def build_panel_quadrature(panels: List[Panel], p: int) -> QuadratureData:
         L_panel=L_panel,
         idx_std=idx_std,
         p=p,
+        pan_za=pan_za,
+        pan_zb=pan_zb,
     )
 
 

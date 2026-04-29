@@ -72,6 +72,107 @@ from .panel_quad import QuadratureData
 
 
 # ---------------------------------------------------------------------------
+# Panel correction kernel (port of MATLAB wHinitZ)
+# ---------------------------------------------------------------------------
+
+def _wHinitZ(
+    ztg: np.ndarray,
+    zsc: np.ndarray,
+    wzpsc: np.ndarray,
+    a: complex,
+    b: complex,
+    self_panel: bool,
+) -> tuple[np.ndarray, np.ndarray]:
+    """
+    Accurate compensation weights for the hypersingular integral on a panel.
+
+    Port of MATLAB wHinitZ (hypsing_correction_matrix.m).
+
+    Computes correction weights wHcmp such that the corrected T_h entry
+
+        T_h[i,j] += -Im(n_i * wHcmp[li, j]) / π
+
+    replaces the inaccurate naive Gauss sum for near-singular target nodes
+    (same panel or neighboring panel).
+
+    The correction is w_accurate - w_naive, so adding it to the naive T_h
+    entry gives the accurate value.
+
+    Parameters
+    ----------
+    ztg     : (Ntg,) complex — target quadrature nodes (all nodes of target panel)
+    zsc     : (ngl,) complex — source quadrature nodes
+    wzpsc   : (ngl,) complex — source complex weights: dz_j = wq_j * τ_j
+    a, b    : complex — complex endpoints of the SOURCE panel
+    self_panel : bool — True for self-panel correction
+
+    Returns
+    -------
+    wHcmp   : (Nc, ngl) complex — correction weights for close target nodes
+    closetg : (Nc,) int — indices into ztg of close targets
+    """
+    ngl = len(zsc)
+    k_arr = np.arange(1, ngl + 1, dtype=float)
+    c = (1.0 - (-1.0) ** k_arr) / k_arr     # c[k] = (1-(-1)^(k+1))/(k+1) in 0-indexed
+
+    cc = (b - a) / 2.0
+    center = (b + a) / 2.0
+    ztgtr = (ztg - center) / cc              # transformed targets
+    zsctr = (zsc - center) / cc              # transformed sources
+
+    if self_panel:
+        closetg = np.arange(len(ztg))
+    else:
+        closetg = np.where(np.abs(ztgtr) < 2.0)[0]
+
+    Nc = len(closetg)
+    if Nc == 0:
+        return np.zeros((0, ngl), dtype=complex), closetg
+
+    ztgtrc = ztgtr[closetg]
+
+    # Naive Gauss approximation: wzpsc[j] / (zsc[j] - ztg[i])^2
+    # For self-panel the diagonal entry is 0/0; fill_diagonal handles it below.
+    with np.errstate(divide="ignore", invalid="ignore"):
+        wHcmpTemp = wzpsc[np.newaxis, :] / (
+            zsc[np.newaxis, :] - ztg[closetg, np.newaxis]
+        ) ** 2
+    wHcmpTemp = np.where(np.isfinite(wHcmpTemp), wHcmpTemp, 0.0)
+    if self_panel:
+        np.fill_diagonal(wHcmpTemp, 0.0)
+
+    # Build P (ngl+1 cols) and R (ngl cols) via Chebyshev recursion
+    P = np.zeros((Nc, ngl + 1), dtype=complex)
+    R = np.zeros((Nc, ngl), dtype=complex)
+
+    if self_panel:
+        # Branch cut correction: for real nodes on (-1,1), log of negative arg
+        # introduces spurious iπ; argAdd cancels it.
+        sgn = np.ones(Nc, dtype=float)
+        sgn[np.imag(ztgtrc) < 0] = -1.0
+        argAdd = -sgn * np.pi * 1j
+        P[:, 0] = argAdd + np.log((1.0 - ztgtrc) / (-1.0 - ztgtrc))
+    else:
+        P[:, 0] = np.log((1.0 - ztgtrc) / (-1.0 - ztgtrc))
+
+    R[:, 0] = -1.0 / (1.0 - ztgtrc) + 1.0 / (-1.0 - ztgtrc)
+
+    for k in range(1, ngl):                  # MATLAB k = 1..ngl-1
+        P[:, k] = ztgtrc * P[:, k - 1] + c[k - 1]
+        R[:, k] = (-1.0 / (1.0 - ztgtrc)
+                   + (-1.0) ** k / (-1.0 - ztgtrc)
+                   + k * P[:, k - 1])
+
+    # Vandermonde matrix: V[i,j] = zsctr[i]^j,  shape (ngl, ngl)
+    V = zsctr[:, np.newaxis] ** np.arange(ngl, dtype=float)
+
+    # R/V in MATLAB: R * inv(V) → solve V.T X.T = R.T → X = solve(V.T, R.T).T
+    wHcmp_close = np.linalg.solve(V.T, R.T).T / cc - wHcmpTemp
+
+    return wHcmp_close, closetg
+
+
+# ---------------------------------------------------------------------------
 # Normal / tangent computation (real-valued, per panel)
 # ---------------------------------------------------------------------------
 
@@ -339,6 +440,131 @@ def regularise_hypersingular(
     total_w = float(wq.sum())
     M = np.outer(np.ones(len(wq)), wq) / total_w
     return W_h + M
+
+
+# ---------------------------------------------------------------------------
+# Corrected assembly with full panel corrections (port of MATLAB
+# hypsing_correction_matrix + laplace_hypsing_matrix)
+# ---------------------------------------------------------------------------
+
+def assemble_hypersingular_corrected(
+    qdata: QuadratureData,
+) -> tuple[np.ndarray, np.ndarray]:
+    """
+    Assemble the hypersingular matrix W_h with accurate panel corrections.
+
+    Port of MATLAB laplace_hypsing_matrix + hypsing_correction_matrix.
+
+    Improvements over assemble_hypersingular_direct
+    ------------------------------------------------
+    - Self-panel: the ENTIRE p×p block is replaced by accurate polynomial
+      quadrature (not just the diagonal + crude same-panel off-diagonal).
+    - Neighbor panels: near-singular rows (|Tr(ztg)| < 2) are replaced by
+      accurate polynomial quadrature.
+    - Far-panel pairs: standard Gauss quadrature (accurate).
+
+    The correction uses a Chebyshev recursion identical to MATLAB wHinitZ:
+      1. Expand the integrand in Chebyshev basis on the source panel.
+      2. Integrate each Chebyshev polynomial analytically via log/recursion.
+      3. Use R/V (back-substitution against Vandermonde) to get weights.
+
+    Formula (MATLAB T_h, then W_h = T_h / 2):
+        T_h[i,j] = -Im(n_i * dz_j / (z_i - z_j)^2) / π
+
+    Returns
+    -------
+    W_h    : ndarray (Nq, Nq) — hypersingular Nyström matrix  (= T_h / 2)
+    corr_W : ndarray (Nq,)    — per-node diagonal contributions from panel
+             corrections (positive; for diagnostic use only)
+    """
+    if qdata.pan_za is None or qdata.pan_zb is None:
+        raise ValueError(
+            "qdata.pan_za / pan_zb are None.  "
+            "Rebuild with build_panel_quadrature (updated version stores endpoints)."
+        )
+
+    Nq   = qdata.n_quad
+    Npan = qdata.n_panels
+
+    # Complex quadrature nodes and normals / tangents
+    Yq_cpx = qdata.Yq[0] + 1j * qdata.Yq[1]            # (Nq,)
+
+    normals_pan, tangents_pan = compute_panel_normals(qdata)
+
+    n_cpx   = np.empty(Nq, dtype=complex)
+    tau_cpx = np.empty(Nq, dtype=complex)
+    for pid in range(Npan):
+        js = qdata.idx_std[pid]
+        n_cpx[js]   = normals_pan[pid, 0]  + 1j * normals_pan[pid, 1]
+        tau_cpx[js] = tangents_pan[pid, 0] + 1j * tangents_pan[pid, 1]
+
+    # Complex weights: dz_j = wq_j * τ_j
+    dz = qdata.wq * tau_cpx                              # (Nq,)
+
+    # ------------------------------------------------------------------
+    # Step 1: Off-diagonal T_h via naive Gauss (accurate for far panels)
+    #   T_h[i,j] = -Im(n_i * dz_j / (z_i - z_j)^2) / π
+    # ------------------------------------------------------------------
+    zi       = Yq_cpx[:, np.newaxis]                     # (Nq, 1)
+    zj       = Yq_cpx[np.newaxis, :]                     # (1, Nq)
+    dij      = zi - zj                                   # (Nq, Nq)
+    dij_safe = np.where(np.abs(dij) > 1e-30, dij, 1.0 + 0j)
+
+    ni_col  = n_cpx[:, np.newaxis]                       # (Nq, 1)
+    dz_row  = dz[np.newaxis, :]                          # (1, Nq)
+
+    T_h = -np.imag(ni_col * dz_row / dij_safe ** 2) / np.pi
+    T_h[np.abs(dij) < 1e-30] = 0.0
+    np.fill_diagonal(T_h, 0.0)
+
+    # ------------------------------------------------------------------
+    # Step 2: Panel corrections (self + 2 neighbors per panel)
+    # For each panel interaction the correction is:
+    #   T_h[target_rows, source_cols] += -Im(n_i * wHcmp[li, :]) / π
+    # (wHcmp = accurate_weight - naive_weight, so adding it replaces the
+    #  naive Gauss rows with accurate polynomial quadrature values)
+    # ------------------------------------------------------------------
+    for pid in range(Npan):
+        js_tg = qdata.idx_std[pid]
+        ztg   = Yq_cpx[js_tg]
+        za_tg = qdata.pan_za[pid]
+        zb_tg = qdata.pan_zb[pid]
+
+        # Self-panel (all Nc = p nodes are "close")
+        wHcmp_self, _ = _wHinitZ(ztg, ztg, dz[js_tg],
+                                  za_tg, zb_tg, self_panel=True)
+        ni_self = n_cpx[js_tg, np.newaxis]               # (p, 1)
+        T_h[np.ix_(js_tg, js_tg)] += (
+            -np.imag(ni_self * wHcmp_self) / np.pi
+        )
+
+        # Neighbor panels (d = ±1, closed curve → modular indexing)
+        for d in (-1, 1):
+            nb_pid = (pid + d) % Npan
+            js_sc  = qdata.idx_std[nb_pid]
+            zsc    = Yq_cpx[js_sc]
+            za_sc  = qdata.pan_za[nb_pid]
+            zb_sc  = qdata.pan_zb[nb_pid]
+
+            wHcmp_nb, closetg_nb = _wHinitZ(
+                ztg, zsc, dz[js_sc], za_sc, zb_sc, self_panel=False
+            )
+            if len(closetg_nb) == 0:
+                continue
+
+            close_global = js_tg[closetg_nb]             # global indices
+            ni_close = n_cpx[close_global, np.newaxis]   # (Nc, 1)
+            T_h[np.ix_(close_global, js_sc)] += (
+                -np.imag(ni_close * wHcmp_nb) / np.pi
+            )
+
+    # W_h = T_h / 2  (consistent with assemble_hypersingular_direct convention)
+    W_h = T_h / 2.0
+
+    # Diagnostic: per-node diagonal (for compatibility with callers that
+    # expect the (W_h, corr_W) signature)
+    corr_W = np.diag(W_h).copy()
+    return W_h, corr_W
 
 
 # ---------------------------------------------------------------------------

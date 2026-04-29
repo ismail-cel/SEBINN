@@ -446,6 +446,41 @@ def fig_rho(rho_C, sigma_C, sigma_BEM, g_values_sorted, arc, sort_idx,
     print(f"  saved → {outpath}")
 
 
+def fig_loss_curves(hist_A, hist_B, hist_C, adam_cutoff, outpath):
+    """Training loss vs iteration for all three cases (normalised to same init)."""
+    fig, ax = plt.subplots(figsize=(10, 4))
+    for hist, label, key, ls in [
+        (hist_A, "A: Standard $||V\\sigma - g||^2$",  "A", "-"),
+        (hist_B, "B: Left $V^{-1}$: $||\\sigma - \\sigma_\\mathrm{BEM}||^2$", "B", "-"),
+        (hist_C, "C: Right $V^{-1}$: $||\\rho - g||^2$", "C", "-"),
+    ]:
+        iters = hist["iter"]
+        losses = hist["loss"]
+        ax.semilogy(iters, losses, ls, color=COLORS[key], lw=LWIDTH, label=label)
+        ax.annotate(f"  {losses[-1]:.1e}",
+                    xy=(iters[-1], losses[-1]), fontsize=9,
+                    color=COLORS[key], va="center")
+
+    ax.axvline(x=adam_cutoff, color="gray", ls=":", lw=1.0, alpha=0.7,
+               label="Adam → L-BFGS")
+    ax.set_xlabel("Iteration", fontsize=12)
+    ax.set_ylabel("Training loss (normalised)", fontsize=12)
+    ax.set_title(
+        r"Loss curves: Koch(1), $g = x^2 - y^2$, no enrichment"
+        "\n(all losses normalised to same initial value for fair comparison)",
+        fontsize=11,
+    )
+    ax.legend(fontsize=10, loc="upper right")
+    ax.grid(True, which="both", lw=0.3, alpha=0.5)
+    try:
+        fig.tight_layout()
+    except Exception:
+        pass
+    fig.savefig(outpath, dpi=300, bbox_inches="tight")
+    plt.close(fig)
+    print(f"  saved → {outpath}")
+
+
 def fig_singular_values(svs, cond_V, Nq, outpath):
     fig, ax = plt.subplots(figsize=(9, 4))
     idx = np.arange(1, Nq + 1)
@@ -661,6 +696,10 @@ def main():
     fig_convergence(
         hist_A, hist_B, hist_C, adam_cutoff,
         os.path.join(fig_dir, "preconditioning_convergence.png"),
+    )
+    fig_loss_curves(
+        hist_A, hist_B, hist_C, adam_cutoff,
+        os.path.join(fig_dir, "preconditioning_loss_curves.png"),
     )
     fig_density(
         sigma_A, sigma_B, sigma_C, sigma_BEM, arc, sort_idx, corner_arcs,

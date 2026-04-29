@@ -525,3 +525,35 @@ print(f"  median|λ(W̃V)|           = {eig_median:.4f}  (Calderón target: 0.25
 print(f"  W̃_sym SPD?              = {'YES' if lmin > 0 else f'NO (n_neg={n_neg}, λ_min={lmin:.3e})'}")
 print(f"  ||VW_h - I/4||/||VW_h|| = {rel:.4f}")
 print(f"  Figures saved to {fig_dir}/")
+
+# ===========================================================================
+# BONUS: compare assemble_hypersingular_direct vs assemble_hypersingular_corrected
+# ===========================================================================
+print("\n" + "=" * 62)
+print("COMPARISON: direct (Hadamard only) vs corrected (full panel)")
+print("=" * 62)
+
+from src.quadrature.hypersingular import assemble_hypersingular_corrected
+
+W_corr, _ = assemble_hypersingular_corrected(qdata)
+W_tilde_corr = regularise_hypersingular(W_corr, wq)
+
+# Calderón eigenvalues (non-symmetric eigvals, same as CHECK 7)
+WV_corr     = W_tilde_corr @ V_h
+eigvals_corr = np.linalg.eigvals(WV_corr)
+abs_corr    = np.abs(eigvals_corr)
+cond_eig_corr = float(abs_corr.max() / (abs_corr.min() + 1e-14))
+med_corr    = float(np.median(abs_corr))
+rel_corr    = float(np.linalg.norm(V_h @ W_corr - np.eye(Nq) * 0.25, "fro")
+                    / np.linalg.norm(V_h @ W_corr, "fro"))
+
+W_tilde_sym_corr = 0.5 * (W_tilde_corr + W_tilde_corr.T)
+eigs_sym_corr = np.linalg.eigvalsh(W_tilde_sym_corr)
+lmin_corr   = float(eigs_sym_corr.min())
+n_neg_corr  = int((eigs_sym_corr < 0).sum())
+
+print(f"  {'Method':<30s}  {'cond_eig(W̃V)':>14s}  {'median|λ|':>10s}  {'n_neg':>6s}  {'||VW-I/4||/||VW||':>18s}")
+print(f"  {'-'*30}  {'-'*14}  {'-'*10}  {'-'*6}  {'-'*18}")
+print(f"  {'direct (Hadamard)':<30s}  {cond_eig:>14.2f}  {eig_median:>10.4f}  {n_neg:>6d}  {rel:>18.4f}")
+print(f"  {'corrected (full panel)':<30s}  {cond_eig_corr:>14.2f}  {med_corr:>10.4f}  {n_neg_corr:>6d}  {rel_corr:>18.4f}")
+print(f"\n  Calderón target: median|λ(W̃V)| → 0.25  (cluster of eigenvalues of VW)")
