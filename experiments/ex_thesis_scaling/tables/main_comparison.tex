@@ -1,0 +1,25 @@
+\begin{table}[ht]
+\centering
+\caption{Scaling study: density error, BIE residual, interior $L^2$ error, and wall time for four loss functions across Koch levels $n=1,2,3$. Geometry: Koch snowflake, $g(x,y)=x^2-y^2$, network $4\times80$ tanh, seed=0. Training: Adam $3\times1000$ + L-BFGS~15\,000 iterations.}
+\label{tab:scaling_main}
+\begin{tabular}{@{}llccccl@{}}
+\toprule
+Level & Method & $\|\sigma_\theta-\sigma^*\|/\|\sigma^*\|$ & $\|V\sigma_\theta-g\|/\|g\|$ & $\|u_\theta-u_{\rm ex}\|/\|u_{\rm ex}\|$ & Wall (s) & L-BFGS \\
+\midrule
+  Koch($n=1$) & Standard & 0.5408 & 3.98e-02 & 2.19e-02 & 9 & stalls \\
+   & Calderón & 0.0212 & 6.99e-03 & 7.83e-03 & 24 & converges \\
+   & Sobolev H¹ & 0.6634 & 2.04e-02 & 2.17e-02 & 53 & stalls \\
+   & $V^{-1}$ ref. & 0.0044 & 7.96e-04 & 1.18e-03 & 28 & converges \\
+\midrule
+  Koch($n=2$) & Standard & 0.6799 & 6.12e-02 & 4.48e-02 & 39 & converges \\
+   & Calderón & 0.1020 & 3.96e-02 & 4.02e-02 & 217 & converges \\
+   & Sobolev H¹ & 0.1845 & 1.89e-01 & 2.99e-01 & 218 & converges \\
+   & $V^{-1}$ ref. & 0.0168 & 3.27e-03 & 4.00e-03 & 106 & converges \\
+\midrule
+  Koch($n=3$) & Standard & 0.8203 & 7.00e-02 & 5.70e-02 & 281 & converges \\
+   & Calderón & 0.2852 & 5.75e-02 & 5.70e-02 & 2105 & converges \\
+   & Sobolev H¹ & 0.2957 & 2.38e-01 & 3.62e-01 & 2059 & converges \\
+   & $V^{-1}$ ref. & 0.1160 & 1.99e-02 & 2.57e-02 & 480 & converges \\
+\bottomrule
+\end{tabular}
+\end{table}

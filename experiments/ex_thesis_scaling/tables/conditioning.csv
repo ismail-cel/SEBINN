@@ -1,0 +1,4 @@
+Level,Nq,condV,condEigWV,condSvdWV,nonNormWV
+Koch1,576,2.5482e+03,3.92,7.06,1.937e-02
+Koch2,2304,9.7658e+03,5.55,11.78,9.713e-03
+Koch3,9216,3.8637e+04,nan,21.35,4.894e-03
