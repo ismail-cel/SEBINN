@@ -1,13 +1,13 @@
 Level,Method,DensityErr,BIERes,InteriorL2,WallSec,LBFGS
-Koch1,A,0.540839,3.9803e-02,2.1854e-02,9.1,stalls
+Koch1,A,0.540839,3.9803e-02,2.1854e-02,9.1,converges
 Koch1,B,0.021158,6.9862e-03,7.8307e-03,23.8,converges
-Koch1,C,0.663405,2.0363e-02,2.1731e-02,52.9,stalls
+Koch1,C,0.663405,2.0363e-02,2.1731e-02,56.8,converges
 Koch1,D,0.004371,7.9631e-04,1.1829e-03,28.3,converges
 Koch2,A,0.679860,6.1212e-02,4.4757e-02,38.5,converges
 Koch2,B,0.102038,3.9609e-02,4.0227e-02,217.1,converges
-Koch2,C,0.184474,1.8866e-01,2.9878e-01,217.6,converges
+Koch2,C,0.184474,1.8866e-01,2.9878e-01,228.4,converges
 Koch2,D,0.016781,3.2700e-03,3.9984e-03,106.0,converges
 Koch3,A,0.820321,7.0015e-02,5.6965e-02,280.7,converges
 Koch3,B,0.285185,5.7511e-02,5.6950e-02,2105.4,converges
-Koch3,C,0.295656,2.3771e-01,3.6173e-01,2059.2,converges
+Koch3,C,0.295656,2.3771e-01,3.6173e-01,2040.9,converges
 Koch3,D,0.115997,1.9914e-02,2.5687e-02,479.8,converges

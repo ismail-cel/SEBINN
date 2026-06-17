@@ -1,0 +1,14 @@
+\begin{table}[ht]
+\centering
+\caption{Operator scaling across Koch levels ($n_{\rm pe}=4$, $p=12$). $\kappa_{\rm eig}(\widetilde{W}V)$ computed only for $N_q\leq 3000$. $\kappa(V^T(I+D_h^TD_h)V)$: exact for $N_q\leq 3000$, Lanczos estimate (lower bound) for $N_q=9216$. $N_{\rm null}(D_h) = N_{\rm pan}$ (one constant per panel).}
+\label{tab:operator_scaling}
+\begin{tabular}{@{}lrccccccr@{}}
+\toprule
+Level & $N_q$ & $\kappa_{\rm svd}(V)$ & $\kappa_{\rm eig}(\widetilde{W}V)$ & $\kappa_{\rm svd}(\widetilde{W}V)$ & Non-norm & $\kappa(V^TV)$ & $\kappa(H^1\text{ Hessian})$ & $N_{\rm null}(D_h)$ \\
+\midrule
+  Koch($n=1$) & 576 & 2.548e+03 & 3.92 & 7.06 & 1.94e-02 & 6.493e+06 & 1.64e+07 & 48 \\
+  Koch($n=2$) & 2304 & 9.766e+03 & 5.55 & 11.78 & 9.71e-03 & 9.537e+07 & 1.48e+08 & 192 \\
+  Koch($n=3$) & 9216 & 3.864e+04 & — & 21.35 & 4.89e-03 & 1.493e+09 & 1.60e+10 & 768 \\
+\bottomrule
+\end{tabular}
+\end{table}

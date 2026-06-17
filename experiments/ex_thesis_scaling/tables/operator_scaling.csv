@@ -1,0 +1,4 @@
+Level,Nq,condV,condEigWV,condSvdWV,nonNormWV,condVtV,condH1Hessian,nullDh
+Koch1,576,2.5482e+03,3.92,7.06,1.937e-02,6.4931e+06,1.6445e+07,48
+Koch2,2304,9.7658e+03,5.55,11.78,9.713e-03,9.5372e+07,1.4829e+08,192
+Koch3,9216,3.8637e+04,nan,21.35,4.894e-03,1.4928e+09,1.6021e+10,768
