@@ -1,0 +1,20 @@
+\begin{table}[ht]
+\centering
+\caption{High-resolution scaling study (Koch $n=1,2$): density error, BIE residual, interior $L^2$ error, and wall time. Geometry: Koch snowflake, $g(x,y)=x^2-y^2$, network $4\times80$ tanh, seed=0. Training: Adam $3\times1000$ + L-BFGS~15\,000 iters. $n_{\rm pe}=12$, $p=16$, $N_q = 2304$ (Koch $n=1$) / $9216$ (Koch $n=2$). Method C: combined Sobolev $H^1$ loss, $\alpha=1$. Koch($n=3$) deferred.}
+\label{tab:scaling_main_hires}
+\begin{tabular}{@{}llccccl@{}}
+\toprule
+Level & Method & $\|\sigma_\theta-\sigma^*\|/\|\sigma^*\|$ & $\|V\sigma_\theta-g\|/\|g\|$ & $\|u_\theta-u_{\rm ex}\|/\|u_{\rm ex}\|$ & Wall (s) & L-BFGS \\
+\midrule
+  Koch($n=1$) & A & 0.6535 & 3.87e-02 & 2.00e-02 & 43 & converges \\
+   & B & 0.0309 & 1.02e-02 & 1.18e-02 & 311 & converges \\
+   & C & 0.1148 & 1.68e-01 & 2.77e-01 & 259 & converges \\
+   & D & 0.0089 & 1.21e-03 & 1.42e-03 & 164 & converges \\
+\midrule
+  Koch($n=2$) & A & 0.7985 & 1.04e-01 & 9.01e-02 & 284 & converges \\
+   & B & 0.3303 & 1.11e-01 & 1.14e-01 & 2247 & converges \\
+   & C & 0.3053 & 3.78e-01 & 6.01e-01 & 1382 & converges \\
+   & D & 0.0549 & 8.52e-03 & 9.30e-03 & 561 & converges \\
+\bottomrule
+\end{tabular}
+\end{table}
