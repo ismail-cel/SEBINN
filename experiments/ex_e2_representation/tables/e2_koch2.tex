@@ -1,0 +1,25 @@
+\begin{table}[ht]
+\centering
+\caption{E2 experiment on Koch($n=2$), $N_q=2304$. Three representations (rows grouped) × four losses. $d/d_D$: density error relative to the D-floor of the same representation. LSQ cond: condition number of the least-squares matrix (Arm 2 only). Network + descent loaded from thesis scaling runs.}
+\label{tab:e2-koch2}
+\begin{tabular}{@{}llcccccr@{}}
+\toprule
+Representation & Loss & Density err & BIE res & Interior $L^2$ & LSQ cond & $d/d_D$ & Wall (s) \\
+\midrule
+  Network + descent & A & 7.98e-01 & 1.04e-01 & 9.01e-02 & — & 14.557 & 284 \\
+   & B & 3.30e-01 & 1.11e-01 & 1.14e-01 & — & 6.021 & 2247 \\
+   & C & 3.05e-01 & 3.78e-01 & 6.01e-01 & — & 5.566 & 1382 \\
+   & D & 5.49e-02 & 8.52e-03 & 9.30e-03 & — & 1.000 & 561 \\
+\midrule
+  Legendre + descent & A & 7.89e-01 & 9.71e-03 & 3.11e-03 & — & 28480.860 & 141 \\
+   & B & 5.64e-04 & 1.51e-04 & 1.61e-04 & — & 20.358 & 137 \\
+   & C & 5.22e-01 & 9.40e-03 & 8.13e-03 & — & 18854.404 & 142 \\
+   & D & 2.77e-05 & 3.86e-06 & 5.44e-05 & — & 1.000 & 1 \\
+\midrule
+  Legendre + LSQ & A & 5.04e-16 & 3.33e-15 & 5.43e-05 & — & 0.001 & 79 \\
+   & B & 5.04e-16 & 3.33e-15 & 5.43e-05 & 1.79e+01 & 0.001 & 18 \\
+   & C & 5.04e-16 & 3.33e-15 & 5.43e-05 & — & 0.001 & 167 \\
+   & D & 5.04e-16 & 3.33e-15 & 5.43e-05 & 6.96e+00 & 0.001 & 0 \\
+\bottomrule
+\end{tabular}
+\end{table}

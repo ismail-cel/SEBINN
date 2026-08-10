@@ -1,0 +1,25 @@
+Level,Representation,Loss,DensityErr,BIERes,InteriorL2,LSQcond,Ratio_dD,WallSec
+Koch1,Network + descent,A,0.653500,3.8714e-02,1.9967e-02,--,73.806,42.6
+Koch1,Network + descent,B,0.030938,1.0225e-02,1.1814e-02,--,3.494,311.1
+Koch1,Network + descent,C,0.114805,1.6849e-01,2.7721e-01,--,12.966,259.2
+Koch1,Network + descent,D,0.008854,1.2114e-03,1.4236e-03,--,1.000,164.1
+Koch1,Legendre + descent,A,0.762370,1.0684e-02,3.9389e-03,--,40441.311,11.7
+Koch1,Legendre + descent,B,0.000107,1.8530e-05,8.8251e-05,--,5.656,11.0
+Koch1,Legendre + descent,C,0.500695,1.5405e-02,1.5545e-02,--,26560.252,11.6
+Koch1,Legendre + descent,D,0.000019,1.5354e-06,8.5760e-05,--,1.000,0.6
+Koch1,Legendre + LSQ,A,0.000000,1.6708e-15,8.5661e-05,2.25e+04,0.000,2.7
+Koch1,Legendre + LSQ,B,0.000000,1.6708e-15,8.5661e-05,1.36e+01,0.000,2.8
+Koch1,Legendre + LSQ,C,0.000000,1.6708e-15,8.5661e-05,8.83e+03,0.000,4.4
+Koch1,Legendre + LSQ,D,0.000000,1.6708e-15,8.5661e-05,6.96e+00,0.000,0.0
+Koch2,Network + descent,A,0.798477,1.0445e-01,9.0091e-02,--,14.557,283.8
+Koch2,Network + descent,B,0.330296,1.1084e-01,1.1439e-01,--,6.021,2246.5
+Koch2,Network + descent,C,0.305297,3.7803e-01,6.0078e-01,--,5.566,1381.8
+Koch2,Network + descent,D,0.054853,8.5247e-03,9.3042e-03,--,1.000,561.1
+Koch2,Legendre + descent,A,0.789027,9.7143e-03,3.1076e-03,--,28480.860,140.9
+Koch2,Legendre + descent,B,0.000564,1.5059e-04,1.6141e-04,--,20.358,136.7
+Koch2,Legendre + descent,C,0.522338,9.4040e-03,8.1303e-03,--,18854.404,141.8
+Koch2,Legendre + descent,D,0.000028,3.8572e-06,5.4441e-05,--,1.000,0.8
+Koch2,Legendre + LSQ,A,0.000000,3.3253e-15,5.4301e-05,—,0.001,78.6
+Koch2,Legendre + LSQ,B,0.000000,3.3253e-15,5.4301e-05,1.79e+01,0.001,18.4
+Koch2,Legendre + LSQ,C,0.000000,3.3253e-15,5.4301e-05,—,0.001,167.3
+Koch2,Legendre + LSQ,D,0.000000,3.3253e-15,5.4301e-05,6.96e+00,0.001,0.0

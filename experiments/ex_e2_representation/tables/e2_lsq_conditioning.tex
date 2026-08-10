@@ -1,0 +1,13 @@
+\begin{table}[ht]
+\centering
+\caption{Condition numbers of the LSQ matrices in Arm 2 (Legendre + least-squares). $G = V_h \Phi$. $\mathrm{cond}(\Phi)$ is the same for both levels (one block, $16\times16$). All others estimated by full SVD (Koch $n=1$) or Lanczos (Koch $n=2$).}
+\label{tab:e2-lsq-cond}
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+Level & $\mathrm{cond}(G)$ (loss A) & $\mathrm{cond}(\widetilde{W}G)$ (loss B) & $\mathrm{cond}([G;D_hG])$ (loss C) & $\mathrm{cond}(\Phi)$ (loss D) \\
+\midrule
+  Koch($n=1$) & 2.25e+04 & 1.36e+01 & 8.83e+03 & 6.96e+00 \\
+  Koch($n=2$) & — & 1.79e+01 & — & 6.96e+00 \\
+\bottomrule
+\end{tabular}
+\end{table}
